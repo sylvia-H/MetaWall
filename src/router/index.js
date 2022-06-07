@@ -8,11 +8,23 @@ const routes = [
   },
   {
     path: '/',
-    name: 'login',
-    component: () => import('../views/LoginView.vue'),
+    name: 'index',
+    component: () => import('../views/IndexView.vue'),
     meta: {
       title: 'MetaWall',
     },
+    children: [
+      {
+        path: '/',
+        name: 'login',
+        component: () => import('../views/LoginView.vue'),
+      },
+      {
+        path: 'signup',
+        name: 'signup',
+        component: () => import('../views/SignUpView.vue'),
+      },
+    ],
   },
   {
     path: '/main',
