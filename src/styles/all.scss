@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components{
+  .themeBanner {
+    @apply relative z-0;
+    &::before {
+      @apply absolute bg-white border-2 border-secondary;
+      content: '';
+      z-index: -1;
+      width: 528px;
+      height: 70px;
+      top: -5px;
+      left: 3px;
+    }
+  }
+  .dialogue {
+    box-shadow: 0 3px 0 0 #000400;
+  }
+}
+
+@layer utilities{
+  .container_wall{
+    max-width: 870px;
+  }
+  .bg-grid {
+    background: -webkit-linear-gradient(top, transparent 59px, #707070 60px),
+      -webkit-linear-gradient(left, #EFECE7 59px, #707070 60px);
+    background-size: 60px 60px;
+  }
+}
