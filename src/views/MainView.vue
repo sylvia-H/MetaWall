@@ -87,7 +87,7 @@ export default {
   methods: {
     getUser(id) {
       this.isLoading = true;
-      let url = `https://cryptic-chamber-79078.herokuapp.com/users/${id}`;
+      let url = `${process.env.BASE_API}/users/${id}`;
       this.$http
         .get(url)
         .then((res) => {

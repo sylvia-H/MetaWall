@@ -79,7 +79,7 @@ export default {
   methods: {
     addPost() {
       this.isLoading = true;
-      let url = 'https://cryptic-chamber-79078.herokuapp.com/posts';
+      let url = `${process.env.BASE_API}/posts`;
       this.$http.post(url, this.post)
         .then((res) => {
           this.isLoading = false;

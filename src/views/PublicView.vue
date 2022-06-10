@@ -87,7 +87,7 @@ export default {
   methods: {
     getPosts() {
       this.isLoading = true;
-      let url = `https://cryptic-chamber-79078.herokuapp.com/posts?timeSort=${this.timeSort}&q=${this.searchKeyword}`;
+      let url = `${process.env.BASE_API}/posts?timeSort=${this.timeSort}&q=${this.searchKeyword}`;
       this.$http
         .get(url)
         .then((res) => {
