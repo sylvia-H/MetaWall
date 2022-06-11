@@ -1,4 +1,7 @@
 <template>
+  <VLoading :active="isLoading" :z-index="3000">
+    <VueLoader></VueLoader>
+  </VLoading>
   <h2 class="text-xl md:text-2xl font-bold sm:mb-9">註冊</h2>
   <div class="sm:hidden my-6">
     <img
@@ -15,6 +18,7 @@
       placeholder="暱稱"
       type="text"
       name="nickname"
+      v-model="user.name"
     />
   </label>
   <label class="w-full mb-4">
@@ -24,6 +28,7 @@
       placeholder="Email"
       type="email"
       name="email"
+      v-model="user.email"
     />
   </label>
   <label class="w-full mb-6">
@@ -33,12 +38,49 @@
       placeholder="Password"
       type="password"
       name="password"
+      v-model="user.password"
     />
   </label>
   <button
+    @click="signUp"
     class="w-full py-4 rounded-lg bg-gray-2 border-2 border-gray-4 hover:bg-blue-700 text-white font-bold text-base mb-4"
   >
     註冊
   </button>
-  <button class="text-secondary font-bold text-base">登入</button>
+  <RouterLink to="/">
+    <button class="text-secondary font-bold text-base">登入</button>
+  </RouterLink>
 </template>
+
+<script>
+import VueLoader from '@/components/LoadingOverlay.vue';
+
+export default {
+  components: {
+    VueLoader,
+  },
+  data() {
+    return {
+      isLoading: false,
+      user: {},
+    };
+  },
+  methods: {
+    signUp() {
+      this.isLoading = true;
+      const user = this.user;
+      this.$http
+        .post(`${import.meta.env.VITE_BASE_API}/users/sign_up`, user)
+        .then(() => {
+          this.isLoading = false;
+          this.user = {};
+          this.$router.push('/');
+        })
+        .catch((err) => {
+          this.isLoading = false;
+          console.dir(err);
+        });
+    },
+  },
+};
+</script>

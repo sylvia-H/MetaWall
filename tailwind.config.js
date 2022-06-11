@@ -118,6 +118,7 @@ module.exports = {
       3: '0.75rem',
       3.5: '0.875rem',
       4: '1rem',
+      4.5: '1.125rem',
       5: '1.25rem',
       6: '1.5rem',
       7: '1.75rem',
@@ -142,7 +143,10 @@ module.exports = {
       64: '16rem',
       72: '18rem',
       80: '20rem',
+      88: '22rem',
       96: '24rem',
+      120: '30rem',
+      132: '33rem',
     },
     animation: {
       none: 'none',

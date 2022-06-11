@@ -78,23 +78,34 @@ export default {
   },
   inject: ['emitter'],
   methods: {
-    getUser(id) {
+    getProfile(token) {
       this.isLoading = true;
-      let url = `https://cryptic-chamber-79078.herokuapp.com/users/${id}`;
-      this.$http
-        .get(url)
-        .then((res) => {
-          this.isLoading = false;
-          this.user = res.data.data;
-        })
-        .catch((err) => {
-          this.isLoading = false;
-          console.dir(err);
-        });
+      let url = `${import.meta.env.VITE_BASE_API}/users/profile`;
+      // this.$http
+      //   .get(url)
+      this.axios({
+        method: 'GET',
+        url,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        this.isLoading = false;
+        this.user = res.data.data;
+        // console.log(this.user);
+      })
+      .catch((err) => {
+        this.isLoading = false;
+        console.dir(err);
+      });
     },
   },
   mounted() {
-    this.getUser('6298bb7386d7d2a709c289de');
+    const token = localStorage.getItem('accessToken');
+    this.getProfile(token);
+    // console.log(token);
+    // this.getUser('6298bb7386d7d2a709c289de');
   },
 };
 </script>

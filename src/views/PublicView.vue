@@ -54,7 +54,7 @@
     </div>
   </div>
   <!-- 貼文動態 -->
-  <WallPosts v-if="posts" :posts="posts" :user="user" />
+  <WallPosts v-if="posts" :user="user" :posts="posts" />
   <NoPost v-else />
 </template>
 
@@ -80,31 +80,39 @@ export default {
   props: ['user'],
   inject: ['emitter'],
   watch: {
-    searchKeyword: function() {
+    searchKeyword: function () {
       this.getPosts();
     },
   },
   methods: {
-    getPosts() {
+    getPosts(token) {
       this.isLoading = true;
-      let url = `${process.env.BASE_API}/posts?timeSort=${this.timeSort}&q=${this.searchKeyword}`;
-      this.$http
-        .get(url)
-        .then((res) => {
-          this.isLoading = false;
-          this.posts = res.data.data;
-        })
-        .catch((err) => {
-          this.isLoading = false;
-          console.dir(err);
-        });
+      let url = `${import.meta.env.VITE_BASE_API}/posts?timeSort=${
+        this.timeSort
+      }&q=${this.searchKeyword}`;
+      // this.$http
+      //   .get(url)
+
+      this.axios({
+        method: 'GET',
+        url,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        this.isLoading = false;
+        this.posts = res.data.data;
+      })
+      .catch((err) => {
+        this.isLoading = false;
+        console.dir(err);
+      });
     },
   },
   mounted() {
-    this.getPosts();
-    this.emitter.on('get-posts', () => {
-      this.getPosts();
-    });
+    const token = localStorage.getItem('accessToken');
+    this.getPosts(token);
   },
 };
 </script>

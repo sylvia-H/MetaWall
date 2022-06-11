@@ -70,7 +70,6 @@ export default {
     return {
       isLoading: false,
       post: {
-        author: '6298bb7386d7d2a709c289de',
         content: '',
         image: '',
       },
@@ -79,18 +78,26 @@ export default {
   methods: {
     addPost() {
       this.isLoading = true;
-      let url = `${process.env.BASE_API}/posts`;
-      this.$http.post(url, this.post)
-        .then((res) => {
-          this.isLoading = false;
-          console.log(this.post);
-          console.dir(res);
-        })
-        .catch((err) => {
-          this.isLoading = false;
-          console.log(this.post);
-          console.dir(err);
-        });
+      let url = `${import.meta.env.VITE_BASE_API}/posts`;
+      const token = localStorage.getItem('accessToken');
+      // this.$http
+      //   .post(url, this.post)
+      this.axios({
+        method: 'POST',
+        url,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: this.post,
+      })
+      .then((res) => {
+        this.isLoading = false;
+        this.$router.push('/main');
+      })
+      .catch((err) => {
+        this.isLoading = false;
+        console.dir(err);
+      });
 
       // 清空貼文內容
       this.post = {

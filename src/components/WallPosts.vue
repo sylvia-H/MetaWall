@@ -35,7 +35,7 @@
         </p>
       </div>
       <!-- 貼圖 -->
-      <div
+      <div v-if="post.image"
         class="w-full h-40 border-2 border-secondary rounded-lg overflow-hidden mb-4"
       >
         <img
@@ -178,9 +178,11 @@ export default {
       isLoading: false,
       allPosts: [],
       commentBody: '',
+      posts: [],
+      user: {},
     };
   },
-  props: ['posts', 'user'],
+  props: ['user','posts'],
   inject: ['emitter'],
   methods: {
     addLikes(post) {

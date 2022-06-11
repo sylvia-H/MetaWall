@@ -25,11 +25,13 @@
             >
               <img
                 class="object-cover w-full h-full"
-                src="../assets/Sylvia-H.jpg"
+                :src="user.avatar"
                 alt="user's avatar"
               />
             </div>
-            <p class="group-hover:cursor-pointer">Sylvia-H</p>
+            <p class="group-hover:cursor-pointer">
+              {{ user.name }}
+            </p>
           </li>
 
           <RouterLink to="/main/follow">
@@ -39,7 +41,10 @@
                 class="flex items-center justify-center h-12 w-12 border-2 border-secondary rounded-full bg-info group-hover:drop-shadow-md group-hover:bg-blue-200 mr-4"
               >
                 <!-- <i class="bi bi-bell text-xl font-extrabold"></i> -->
-                <span class="iconify text-xl font-extrabold" data-icon="bi:bell"></span>
+                <span
+                  class="iconify text-xl font-extrabold"
+                  data-icon="bi:bell"
+                ></span>
               </button>
               <p
                 class="group-hover:cursor-pointer group-hover:border-b-2 border-secondary"
@@ -55,7 +60,10 @@
                 class="flex items-center justify-center h-12 w-12 border-2 border-secondary rounded-full bg-info group-hover:drop-shadow-md group-hover:bg-blue-200 mr-4"
               >
                 <!-- <i class="bi bi-hand-thumbs-up text-xl font-extrabold"></i> -->
-                <span class="iconify text-xl font-extrabold" data-icon="bi:hand-thumbs-up"></span>
+                <span
+                  class="iconify text-xl font-extrabold"
+                  data-icon="bi:hand-thumbs-up"
+                ></span>
               </button>
               <p
                 class="group-hover:cursor-pointer group-hover:border-b-2 border-secondary"
@@ -76,32 +84,42 @@ import VueLoader from '@/components/LoadingOverlay.vue';
 export default {
   components: {
     Navbar,
-    VueLoader
+    VueLoader,
   },
   data() {
     return {
       isLoading: false,
-      user:{},
+      user: {},
     };
   },
   methods: {
-    getUser(id) {
+    getProfile(token) {
       this.isLoading = true;
-      let url = `${process.env.BASE_API}/users/${id}`;
-      this.$http
-        .get(url)
-        .then((res) => {
-          this.isLoading = false;
-          this.user = res.data.data;
-        })
-        .catch((err) => {
-          this.isLoading = false;
-          console.dir(err);
-        });
+      let url = `${import.meta.env.VITE_BASE_API}/users/profile`;
+      // this.$http
+      //   .get(url)
+      this.axios({
+        method: 'GET',
+        url,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        this.isLoading = false;
+        this.user = res.data.data;
+        // console.log(this.user);
+      })
+      .catch((err) => {
+        this.isLoading = false;
+        console.dir(err);
+      });
     },
   },
   mounted() {
-    this.getUser('6298bb7386d7d2a709c289de');
+    const token = localStorage.getItem('accessToken');
+    this.getProfile(token);
+    // this.getUser('6298bb7386d7d2a709c289de');
   },
 };
 </script>
