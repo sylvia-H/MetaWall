@@ -118,8 +118,12 @@ export default {
   },
   mounted() {
     const token = localStorage.getItem('accessToken');
-    this.getProfile(token);
-    // this.getUser('6298bb7386d7d2a709c289de');
+    const _id = localStorage.getItem('userID');
+    const name = localStorage.getItem('userName');
+    const avatar = localStorage.getItem('userAvatar');
+    const role = localStorage.getItem('userRole');
+    this.user = { token, _id, name, role, avatar };
+    // this.getProfile(token);
   },
 };
 </script>

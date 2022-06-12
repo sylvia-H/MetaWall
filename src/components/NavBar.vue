@@ -90,22 +90,25 @@ export default {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((res) => {
-        this.isLoading = false;
-        this.user = res.data.data;
-        // console.log(this.user);
-      })
-      .catch((err) => {
-        this.isLoading = false;
-        console.dir(err);
-      });
+        .then((res) => {
+          this.isLoading = false;
+          this.user = res.data.data;
+          // console.log(this.user);
+        })
+        .catch((err) => {
+          this.isLoading = false;
+          console.dir(err);
+        });
     },
   },
   mounted() {
     const token = localStorage.getItem('accessToken');
-    this.getProfile(token);
-    // console.log(token);
-    // this.getUser('6298bb7386d7d2a709c289de');
+    const _id = localStorage.getItem('userID');
+    const name = localStorage.getItem('userName');
+    const avatar = localStorage.getItem('userAvatar');
+    const role = localStorage.getItem('userRole');
+    this.user = { token, _id, name, role, avatar };
+    // this.getProfile(this.user.token);
   },
 };
 </script>

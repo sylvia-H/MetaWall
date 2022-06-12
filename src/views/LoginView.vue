@@ -63,10 +63,14 @@ export default {
         .post(`${import.meta.env.VITE_BASE_API}/users/sign_in`, user)
         .then((res) => {
           this.isLoading = false;
-          // 本機儲存 token & axios 全域表頭通用設定
-          const token = res.data.user.token;
+          // 本機儲存 token 等 payload 資訊
+          const { token, _id, name, role, avatar } = res.data.user;
           localStorage.setItem('accessToken', token);
-          this.axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
+          localStorage.setItem('userID', _id);
+          localStorage.setItem('userName', name);
+          localStorage.setItem('userAvatar', avatar);
+          localStorage.setItem('userRole', role);
+          // this.axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
           this.$router.push('/main');
         })
         .catch((err) => {

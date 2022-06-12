@@ -47,7 +47,7 @@
       <!-- 按讚數 -->
       <div class="flex items-center mb-4">
         <!-- 有讚數 -->
-        <div v-if="post.likes" class="flex items-center">
+        <div v-if="post.likes.length" class="flex items-center">
           <div class="group mr-2">
             <button
               type="button"
@@ -76,7 +76,7 @@
             </button>
           </div>
           <span class="font-baloo-da-2 text-base text-secondary">
-            {{ post.likes }}
+            {{ post.likes.length }}
           </span>
         </div>
         <!-- 沒有讚數 -->
