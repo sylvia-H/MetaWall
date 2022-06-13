@@ -10,3 +10,11 @@ export function transferToDate(date) {
   const str = `${year}-${month}-${day} ${Number(hours) < 12 ? 'AM' : 'PM'} ${Number(hours) < 10 ? `0${hours}` : hours}:${Number(minutes) < 10 ? `0${minutes}` : minutes}`;
   return str;
 }
+
+export function transferSinceThen(date) {
+  // 算出距今幾天
+  const Today = new Date(Date.now()).getDay();
+  const Data = new Date(date).getDay();
+  const day = Today - Data;
+  return day;
+}

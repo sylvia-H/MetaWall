@@ -10,7 +10,7 @@ import 'vue-loading-overlay/dist/vue-loading.css';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 // 自定義 methods
-import { transferToDate } from './methods/filters';
+import { transferToDate, transferSinceThen } from './methods/filters';
 // vee-validate
 import {
   Form, Field, ErrorMessage, defineRule, configure,
@@ -45,6 +45,7 @@ setLocale('zh_TW');
 const app = createApp(App);
 app.config.globalProperties.$filters = {
   transferToDate,
+  transferSinceThen,
 };
 app.use(router);
 app.use(VueAxios, axios);

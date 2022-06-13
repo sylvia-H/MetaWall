@@ -1,5 +1,8 @@
 <template>
-  <!-- 貼文排序 & 搜尋列 -->
+  <VLoading :active="isLoading" :z-index="3000">
+    <VueLoader></VueLoader>
+  </VLoading>
+  <!-- 張貼動態 -->
   <div class="themeBanner w-132 bg-white border-2 border-secondary p-5 mb-4">
     <p class="font-azeret-mono text-xl font-bold text-center">張貼動態</p>
   </div>
