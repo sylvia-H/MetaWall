@@ -34,7 +34,7 @@
     />
     <ErrorMessage class="text-red-600 text-sm text-bold" name="password" />
     <p v-if="signInErr" class="mt-2 text-red-600 text-sm text-bold">
-      帳號密碼輸入錯誤，或該帳號不存在
+      帳號密碼輸入錯誤，或該帳號不存在，請重新輸入！
     </p>
     <button
       type="submit"
