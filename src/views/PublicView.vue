@@ -54,7 +54,7 @@
     </div>
   </div>
   <!-- 貼文動態 -->
-  <WallPosts v-if="posts" :user="user" :posts="posts" />
+  <WallPosts v-if="posts" :user="user" :posts="posts" @get-posts="getPosts" />
   <NoPost v-else />
 </template>
 
@@ -85,8 +85,9 @@ export default {
     },
   },
   methods: {
-    getPosts(token) {
+    getPosts() {
       this.isLoading = true;
+      const token = localStorage.getItem('accessToken');
       let url = `${import.meta.env.VITE_BASE_API}/posts?timeSort=${
         this.timeSort
       }&q=${this.searchKeyword}`;
