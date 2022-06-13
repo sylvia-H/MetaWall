@@ -11,32 +11,38 @@
       alt="MetaWall image"
     />
   </div>
-  <label for="email" class="w-full mb-4">
-    <span class="sr-only">Email</span>
-    <input
-      class="placeholder:italic placeholder:text-slate-400 block bg-white w-full border-2 border-secondary px-6 py-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+  <VForm
+    class="w-full"
+    @submit="signIn"
+    :validation-schema="VFormSchema"
+    v-slot="{ errors }"
+  >
+    <VField
+      class="mt-4 px-6 py-3 placeholder:italic placeholder:text-slate-400 block bg-white w-full border-2 border-secondary shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
       placeholder="Email"
       type="email"
       name="email"
       v-model="user.email"
     />
-  </label>
-  <label for="password" class="w-full mb-6">
-    <span class="sr-only">Password</span>
-    <input
-      class="placeholder:italic placeholder:text-slate-400 block bg-white w-full border-2 border-secondary px-6 py-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+    <ErrorMessage class="text-red-600 text-sm text-bold" name="email" />
+    <VField
+      class="mt-4 px-6 py-3 placeholder:italic placeholder:text-slate-400 block bg-white w-full border-2 border-secondary shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
       placeholder="Password"
       type="password"
       name="password"
       v-model="user.password"
     />
-  </label>
-  <button
-    @click="signIn"
-    class="w-full py-4 rounded-lg bg-primary hover:bg-blue-700 text-white font-bold text-base mb-4"
-  >
-    登入
-  </button>
+    <ErrorMessage class="text-red-600 text-sm text-bold" name="password" />
+    <p v-if="signInErr" class="mt-2 text-red-600 text-sm text-bold">
+      帳號密碼輸入錯誤，或該帳號不存在
+    </p>
+    <button
+      type="submit"
+      class="w-full my-4 py-4 rounded-lg bg-primary hover:bg-blue-700 text-white font-bold text-base"
+    >
+      登入
+    </button>
+  </VForm>
   <RouterLink to="/signup">
     <button class="text-secondary font-bold text-base">註冊帳號</button>
   </RouterLink>
@@ -53,6 +59,11 @@ export default {
     return {
       isLoading: false,
       user: {},
+      VFormSchema: {
+        email: 'required|email',
+        password: 'required|alpha_num_mix',
+      },
+      signInErr: false,
     };
   },
   methods: {
@@ -63,6 +74,7 @@ export default {
         .post(`${import.meta.env.VITE_BASE_API}/users/sign_in`, user)
         .then((res) => {
           this.isLoading = false;
+          this.signInErr = false;
           // 本機儲存 token 等 payload 資訊
           const { token, _id, name, role, avatar } = res.data.user;
           localStorage.setItem('accessToken', token);
@@ -75,6 +87,7 @@ export default {
         })
         .catch((err) => {
           this.isLoading = false;
+          this.signInErr = true;
           console.dir(err);
         });
     },
