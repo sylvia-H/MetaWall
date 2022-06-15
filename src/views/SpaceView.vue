@@ -5,9 +5,7 @@
   <!-- 個人貼文牆：個人資訊欄 -->
   <div class="myPostsBanner mb-4">
     <div class="flex bg-white border-2 border-secondary rounded-lg">
-      <div
-        class="w-20 h-20 overflow-hidden mr-2.5 border-r-2 border-secondary"
-      >
+      <div class="w-20 h-20 overflow-hidden mr-2.5 border-r-2 border-secondary">
         <img
           class="object-cover w-full h-full"
           :src="author.avatar"
@@ -24,7 +22,20 @@
           </p>
         </div>
         <div>
-          <button type="button" class="hover:dialogue rounded-lg py-2 px-8 bg-warning border-2 border-secondary font-bold font-noto-sans-tc">
+          <button
+            v-if="isFollow"
+            @click="followAuthor(author._id)"
+            type="button"
+            class="hover:dialogue rounded-lg py-2 px-8 bg-pink-1 border-2 border-secondary font-bold font-noto-sans-tc"
+          >
+            追蹤中
+          </button>
+          <button
+            v-else
+            @click="followAuthor(author._id)"
+            type="button"
+            class="hover:dialogue rounded-lg py-2 px-8 bg-warning border-2 border-secondary font-bold font-noto-sans-tc"
+          >
             追蹤
           </button>
         </div>
@@ -102,12 +113,14 @@ export default {
   data() {
     return {
       isLoading: false,
-      author:{
+      author: {
+        avatar: 'https://i.imgur.com/K3dyy79.png',
         followers: [],
       },
       posts: [],
       timeSort: 'desc',
       searchKeyword: '',
+      isFollow: false,
     };
   },
   methods: {
@@ -127,16 +140,15 @@ export default {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((res) => {
-        this.isLoading = false;
-        this.posts = res.data.data;
-        this.getProfile(res.data.data[0].author._id);
-        console.log(res.data.data);
-      })
-      .catch((err) => {
-        this.isLoading = false;
-        console.dir(err);
-      });
+        .then((res) => {
+          this.isLoading = false;
+          this.posts = res.data.data;
+          console.log(res.data.data);
+        })
+        .catch((err) => {
+          this.isLoading = false;
+          console.dir(err);
+        });
     },
     getProfile(id) {
       this.isLoading = true;
@@ -152,7 +164,38 @@ export default {
         .then((res) => {
           this.isLoading = false;
           this.author = res.data.data;
-          console.log(this.author);
+          // this.isFollow = res.data.data.followers.forEach((user) => {
+          //   if (user._id === localStorage.getItem('userID')) {
+          //     this.isFollow = true;
+          //   }
+          // });
+        })
+        .catch((err) => {
+          this.isLoading = false;
+          console.dir(err);
+        });
+    },
+    followAuthor(id) {
+      this.isLoading = true;
+      const token = localStorage.getItem('accessToken');
+      let url = `${import.meta.env.VITE_BASE_API}/users/follow/${id}`;
+      let httpStatus;
+      if (this.isFollow) {
+        httpStatus = 'DELETE';
+      } else {
+        httpStatus = 'POST';
+      }
+      this.axios({
+        method: httpStatus,
+        url,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          this.isLoading = false;
+          httpStatus === 'DELETE' ? (this.isFollow = false) : (this.isFollow = true);
+          this.getProfile(id);
         })
         .catch((err) => {
           this.isLoading = false;
@@ -161,8 +204,9 @@ export default {
     },
   },
   mounted() {
-    const id = localStorage.getItem('userID');
+    const { id } = this.$route.params;
     this.getPosts(id);
+    this.getProfile(id);
   },
 };
 </script>
