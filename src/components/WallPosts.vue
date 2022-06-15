@@ -10,19 +10,23 @@
     <div class="p-6">
       <!-- 發文者資訊 -->
       <div class="flex mb-4">
-        <div
-          class="h-11 w-11 border-2 border-secondary rounded-full overflow-hidden mr-2.5"
-        >
-          <img
-            class="object-cover w-full h-full"
-            :src="post.author.avatar"
-            :alt="`${post.author.name}'s avatar`"
-          />
-        </div>
+        <RouterLink :to="`/main/space/${post.author._id}`">
+          <div
+            class="h-11 w-11 border-2 border-secondary rounded-full overflow-hidden mr-2.5"
+          >
+            <img
+              class="object-cover w-full h-full"
+              :src="post.author.avatar"
+              :alt="`${post.author.name}'s avatar`"
+            />
+          </div>
+        </RouterLink>
         <div>
-          <p class="font-noto-sans-tc font-bold text-base mb-1">
-            {{ post.author.name }}
-          </p>
+          <RouterLink :to="`/main/space/${post.author._id}`">
+            <p class="font-noto-sans-tc font-bold text-base mb-1">
+              {{ post.author.name }}
+            </p>
+          </RouterLink>
           <p class="font-baloo-da-2 text-xs text-brown-1">
             {{ $filters.transferToDate(post.createdAt) }}
           </p>
@@ -35,7 +39,8 @@
         </p>
       </div>
       <!-- 貼圖 -->
-      <div v-if="post.image"
+      <div
+        v-if="post.image"
         class="w-full h-40 border-2 border-secondary rounded-lg overflow-hidden mb-4"
       >
         <img
@@ -49,10 +54,7 @@
         <!-- 有讚數 -->
         <div v-if="post.likes.length" class="flex items-center">
           <div class="group mr-2">
-            <button
-              type="button"
-              class="group-hover:hidden group-focus:hidden"
-            >
+            <button type="button" class="group-hover:hidden group-focus:hidden">
               <!-- <i
                 class="bi bi-hand-thumbs-up text-xl font-extrabold text-primary"
               ></i> -->
@@ -182,7 +184,7 @@ export default {
       user: {},
     };
   },
-  props: ['user','posts'],
+  props: ['user', 'posts'],
   inject: ['emitter'],
   methods: {
     addLikes(postID) {

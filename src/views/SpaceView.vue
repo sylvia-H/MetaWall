@@ -21,7 +21,7 @@
             {{ author.followers.length }} 人追蹤
           </p>
         </div>
-        <div>
+        <div v-if="showFollow">
           <button
             v-if="isFollow"
             @click="followAuthor(author._id)"
@@ -121,6 +121,7 @@ export default {
       timeSort: 'desc',
       searchKeyword: '',
       isFollow: false,
+      showFollow: true,
     };
   },
   methods: {
@@ -130,9 +131,6 @@ export default {
       let url = `${import.meta.env.VITE_BASE_API}/posts/${id}?timeSort=${
         this.timeSort
       }&q=${this.searchKeyword}`;
-      // this.$http
-      //   .get(url)
-
       this.axios({
         method: 'GET',
         url,
@@ -164,11 +162,14 @@ export default {
         .then((res) => {
           this.isLoading = false;
           this.author = res.data.data;
-          // this.isFollow = res.data.data.followers.forEach((user) => {
-          //   if (user._id === localStorage.getItem('userID')) {
-          //     this.isFollow = true;
-          //   }
-          // });
+          res.data.data.followers.forEach((user) => {
+            if (user._id === localStorage.getItem('userID')) {
+              this.isFollow = true;
+            }
+          });
+          if (id === localStorage.getItem('userID')) {
+            this.showFollow = false;
+          }
         })
         .catch((err) => {
           this.isLoading = false;
@@ -194,7 +195,9 @@ export default {
       })
         .then((res) => {
           this.isLoading = false;
-          httpStatus === 'DELETE' ? (this.isFollow = false) : (this.isFollow = true);
+          httpStatus === 'DELETE'
+            ? (this.isFollow = false)
+            : (this.isFollow = true);
           this.getProfile(id);
         })
         .catch((err) => {

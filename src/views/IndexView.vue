@@ -21,6 +21,22 @@
   </div>
 </template>
 
+<script>
+export default {
+  mounted() {
+    const token = localStorage.getItem('accessToken');
+    const _id = localStorage.getItem('userID');
+    const name = localStorage.getItem('userName');
+    const avatar = localStorage.getItem('userAvatar');
+    const role = localStorage.getItem('userRole');
+    this.user = { token, _id, name, role, avatar };
+    if(!token){
+      this.$router.push('/');
+    }
+  },
+};
+</script>
+
 <style lang="scss">
 #indexPlatform {
   @media (min-width: 1024px) {

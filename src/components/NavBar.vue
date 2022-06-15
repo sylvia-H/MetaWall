@@ -80,7 +80,7 @@ export default {
   data() {
     return {
       user: {
-        avatar:'https://i.imgur.com/K3dyy79.png',
+        avatar: 'https://i.imgur.com/K3dyy79.png',
       },
     };
   },
@@ -106,9 +106,9 @@ export default {
           console.dir(err);
         });
     },
-    logOut(){
-      localStorage.setItem('accessToken','');
-      this.$router.push('/');
+    logOut() {
+      localStorage.setItem('accessToken', '');
+      this.$router.push({ name: 'index' });
     },
   },
   mounted() {

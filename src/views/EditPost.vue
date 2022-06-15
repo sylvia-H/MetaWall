@@ -15,6 +15,15 @@
     class="dialogue w-full border-2 border-secondary bg-white rounded-lg mb-4"
   >
     <div class="p-8">
+      <!-- 貼文隱私狀態 -->
+      <p class="font-noto-sans-tc text-base mb-2">貼文隱私狀態</p>
+      <select
+        v-model="post.privacy"
+        class="border-2 border-secondary focus:border-indigo-300 text-sm py-2 px-4 mb-4"
+      >
+        <option value="private">只限本人</option>
+        <option value="public">公開</option>
+      </select>
       <p class="font-noto-sans-tc text-base mb-2">貼文內容</p>
       <!-- 貼文內容 -->
       <textarea
@@ -36,6 +45,19 @@
           v-model="post.image"
         />
       </label>
+      <label
+        for="file"
+        class="relative mb-4 flex items-center justify-center text-white bg-black w-30 h-10"
+      >
+        <input
+          @change="uploadImg"
+          type="file"
+          class="absolute top-0 left-0 cursor-pointer opacity-0 w-full h-full"
+        />
+        <button type="button" class="whitespace-nowrap py-1 px-6">
+          上傳圖片檔
+        </button>
+      </label>
       <!-- 測試用網址：https://reurl.cc/d2pNrg -->
       <!-- <label for="uploadFile" class="relative block mb-5">
         <input
@@ -55,6 +77,7 @@
           alt="post image"
         />
       </div>
+      <p class="text-red-1 text-base font-bold">{{ errorMsg }}</p>
       <!-- 送出貼文按鈕 -->
       <div class="mt-8 w-full flex justify-center">
         <button
@@ -84,7 +107,9 @@ export default {
       post: {
         content: '',
         image: '',
+        privacy: 'private',
       },
+      errorMsg: '',
     };
   },
   methods: {
@@ -102,20 +127,45 @@ export default {
         },
         data: this.post,
       })
-      .then((res) => {
-        this.isLoading = false;
-        this.$router.push('/main');
-      })
-      .catch((err) => {
-        this.isLoading = false;
-        console.dir(err);
-      });
+        .then((res) => {
+          this.isLoading = false;
+          this.$router.push('/main');
+        })
+        .catch((err) => {
+          this.isLoading = false;
+          console.dir(err);
+        });
 
       // 清空貼文內容
       this.post = {
         content: '',
         image: '',
       };
+    },
+    uploadImg(e) {
+      this.isLoading = true;
+      let url = `${import.meta.env.VITE_BASE_API}/upload`;
+      const token = localStorage.getItem('accessToken');
+      let data = new FormData();
+      const file = e.target.files[0];
+      data.append('file', file);
+      this.axios({
+        method: 'POST',
+        url,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data,
+      })
+        .then((res) => {
+          this.isLoading = false;
+          this.errorMsg = '';
+          this.post.image = res.data.imgUrl;
+        })
+        .catch((err) => {
+          this.isLoading = false;
+          this.errorMsg = err.response.data.message;
+        });
     },
   },
 };
