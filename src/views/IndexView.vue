@@ -23,16 +23,29 @@
 
 <script>
 export default {
+  methods: {
+    check() {
+      this.$http
+        .get(`${import.meta.env.VITE_BASE_API}/check`)
+        .then((res) => {
+          // 本機儲存 token 等 payload 資訊
+          const { token, _id, name, role, avatar } = res.data.user;
+          localStorage.setItem('accessToken', token);
+          localStorage.setItem('userID', _id);
+          localStorage.setItem('userName', name);
+          localStorage.setItem('userAvatar', avatar);
+          localStorage.setItem('userRole', role);
+          this.$router.push('/main');
+        })
+        .catch((err) => {
+          this.$router.push('/');
+          console.dir(err);
+        });
+    },
+  },
   mounted() {
     const token = localStorage.getItem('accessToken');
-    const _id = localStorage.getItem('userID');
-    const name = localStorage.getItem('userName');
-    const avatar = localStorage.getItem('userAvatar');
-    const role = localStorage.getItem('userRole');
-    this.user = { token, _id, name, role, avatar };
-    if(!token){
-      this.$router.push('/');
-    }
+    this.check(token);
   },
 };
 </script>

@@ -125,7 +125,6 @@ export default {
     if(!token){
       this.$router.push('/');
     }
-    // this.getProfile(token);
   },
 };
 </script>
