@@ -92,5 +92,11 @@ export default {
         });
     },
   },
+  mounted() {
+    const token = localStorage.getItem('accessToken');
+    if(token){
+      this.$router.push('/main');
+    }
+  },
 };
 </script>

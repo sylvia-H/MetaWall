@@ -7,7 +7,7 @@
     </div>
     <div class="p-8">
       <p class="font-noto-sans-tc text-base text-brown-1 text-center">
-        目前尚無動態，新增一則貼文吧！
+        目前尚無動態
       </p>
     </div>
   </div>

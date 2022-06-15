@@ -89,15 +89,15 @@ export default {
   data() {
     return {
       isLoading: false,
-      user: {},
+      user: {
+        avatar:'https://i.imgur.com/K3dyy79.png',
+      },
     };
   },
   methods: {
     getProfile(token) {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/users/profile`;
-      // this.$http
-      //   .get(url)
       this.axios({
         method: 'GET',
         url,
@@ -108,7 +108,6 @@ export default {
       .then((res) => {
         this.isLoading = false;
         this.user = res.data.data;
-        // console.log(this.user);
       })
       .catch((err) => {
         this.isLoading = false;
@@ -123,6 +122,9 @@ export default {
     const avatar = localStorage.getItem('userAvatar');
     const role = localStorage.getItem('userRole');
     this.user = { token, _id, name, role, avatar };
+    if(!token){
+      this.$router.push('/');
+    }
     // this.getProfile(token);
   },
 };

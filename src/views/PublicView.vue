@@ -113,7 +113,7 @@ export default {
   },
   mounted() {
     const token = localStorage.getItem('accessToken');
-    this.getPosts(token);
+    this.getPosts();
   },
 };
 </script>

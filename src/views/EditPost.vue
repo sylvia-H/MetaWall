@@ -3,8 +3,12 @@
     <VueLoader></VueLoader>
   </VLoading>
   <!-- 張貼動態 -->
-  <div class="themeBanner w-132 bg-white border-2 border-secondary p-5 mb-4">
-    <p class="font-azeret-mono text-xl font-bold text-center">張貼動態</p>
+  <div class="themeBanner mb-4">
+    <div
+      class="h-20 flex items-center justify-center bg-white border-2 border-secondary"
+    >
+      <p class="font-azeret-mono text-xl font-bold text-center">張貼動態</p>
+    </div>
   </div>
   <!-- 編輯貼文 -->
   <div
@@ -68,7 +72,12 @@
 </template>
 
 <script>
+import VueLoader from '@/components/LoadingOverlay.vue';
+
 export default {
+  components: {
+    VueLoader,
+  },
   data() {
     return {
       isLoading: false,
