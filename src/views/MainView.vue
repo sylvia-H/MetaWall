@@ -95,18 +95,22 @@ export default {
     };
   },
   methods: {
-    check() {
-      this.$http
-        .get(`${import.meta.env.VITE_BASE_API}/check`)
+    check(token) {
+      const url = `${import.meta.env.VITE_BASE_API}/check`;
+      this.axios({
+        method: 'GET',
+        url,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
         .then((res) => {
-          // 本機儲存 token 等 payload 資訊
-          const { token, _id, name, role, avatar } = res.data.user;
-          localStorage.setItem('accessToken', token);
+          const { _id, name, avatar, role } = res.data;
           localStorage.setItem('userID', _id);
           localStorage.setItem('userName', name);
           localStorage.setItem('userAvatar', avatar);
           localStorage.setItem('userRole', role);
-          this.user = { token, _id, name, avatar, role };
+          // this.user = { _id, name, avatar, role };
         })
         .catch((err) => {
           localStorage.setItem('accessToken', '');
