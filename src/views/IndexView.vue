@@ -21,35 +21,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  methods: {
-    check() {
-      this.$http
-        .get(`${import.meta.env.VITE_BASE_API}/check`)
-        .then((res) => {
-          // 本機儲存 token 等 payload 資訊
-          const { token, _id, name, role, avatar } = res.data.user;
-          localStorage.setItem('accessToken', token);
-          localStorage.setItem('userID', _id);
-          localStorage.setItem('userName', name);
-          localStorage.setItem('userAvatar', avatar);
-          localStorage.setItem('userRole', role);
-          this.$router.push('/main');
-        })
-        .catch((err) => {
-          this.$router.push('/');
-          console.dir(err);
-        });
-    },
-  },
-  mounted() {
-    const token = localStorage.getItem('accessToken');
-    this.check(token);
-  },
-};
-</script>
-
 <style lang="scss">
 #indexPlatform {
   @media (min-width: 1024px) {
