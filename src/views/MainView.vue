@@ -104,13 +104,8 @@ export default {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then((res) => {
-          const { _id, name, avatar, role } = res.data;
-          localStorage.setItem('userID', _id);
-          localStorage.setItem('userName', name);
-          localStorage.setItem('userAvatar', avatar);
-          localStorage.setItem('userRole', role);
-          // this.user = { _id, name, avatar, role };
+        .then(() => {
+          this.getProfile(token);
         })
         .catch((err) => {
           localStorage.setItem('accessToken', '');
