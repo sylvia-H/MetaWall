@@ -210,33 +210,23 @@ export default {
     addComment(post) {
       this.isLoading = true;
       const comment = {
-        articleID: post['_id'],
+        article_id: post['_id'],
         author: this.user['_id'],
-        body: this.commentBody,
+        comment: this.commentBody,
       };
-      const URL_Comment =
-        'https://cryptic-chamber-79078.herokuapp.com/comments';
-      const URL_Post = `https://cryptic-chamber-79078.herokuapp.com/posts/${post['_id']}`;
-      this.$http
-        .post(URL_Comment, comment)
+      const url = `${import.meta.env.VITE_BASE_API}/comments`;
+      const token = localStorage.getItem('accessToken');
+      this.axios({
+        method: 'POST',
+        url,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: comment,
+      })
         .then((res) => {
-          const data = res.data.data;
-          const commentId = data[data.length - 1]['_id'];
-          let postBody = post;
-          postBody.comments.push(commentId);
-          console.log(postBody);
-          this.$http
-            .patch(URL_Post, postBody)
-            .then((res) => {
-              this.isLoading = false;
-              console.log(res.data.data);
-              this.posts = res.data.data;
-              this.emitter.emit('get-posts');
-            })
-            .catch((err) => {
-              this.isLoading = false;
-              console.dir(err);
-            });
+          this.isLoading = false;
+          this.$emit('get-posts');
         })
         .catch((err) => {
           this.isLoading = false;
