@@ -21,6 +21,37 @@
   </div>
 </template>
 
+<script>
+export default {
+  methods: {
+    check(token) {
+      const url = `${import.meta.env.VITE_BASE_API}/check`;
+      this.axios({
+        method: 'GET',
+        url,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then(() => {
+          this.$router.push('/main');
+        })
+        .catch((err) => {
+          localStorage.setItem('accessToken', '');
+          this.$router.push('/');
+          console.dir(err);
+        });
+    },
+  },
+  mounted() {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      this.check(token);
+    }
+  },
+};
+</script>
+
 <style lang="scss">
 #indexPlatform {
   @media (min-width: 1024px) {

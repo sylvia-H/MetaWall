@@ -264,9 +264,9 @@ export default {
     };
   },
   methods: {
-    getProfile(id) {
+    getProfile() {
       this.isLoading = true;
-      let url = `${import.meta.env.VITE_BASE_API}/users/profile/${id}`;
+      let url = `${import.meta.env.VITE_BASE_API}/users/profile`;
       const token = localStorage.getItem('accessToken');
       this.axios({
         method: 'GET',
@@ -278,6 +278,7 @@ export default {
         .then((res) => {
           this.isLoading = false;
           this.profile = res.data.data;
+          this.$emit('get-profile');
         })
         .catch((err) => {
           this.isLoading = false;
@@ -298,7 +299,8 @@ export default {
       })
         .then((res) => {
           this.isLoading = false;
-          this.getProfile();
+          // this.getProfile();
+          this.$emit('get-profile');
         })
         .catch((err) => {
           this.isLoading = false;
@@ -369,8 +371,7 @@ export default {
     },
   },
   mounted() {
-    const _id = localStorage.getItem('userID');
-    this.getProfile(_id);
+    this.getProfile();
   },
 };
 </script>

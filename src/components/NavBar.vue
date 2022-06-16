@@ -84,42 +84,12 @@ export default {
       },
     };
   },
-  inject: ['emitter'],
+  props: ['user'],
   methods: {
-    getProfile() {
-      this.isLoading = true;
-      const token = localStorage.getItem('accessToken');
-      let url = `${import.meta.env.VITE_BASE_API}/users/profile`;
-      this.axios({
-        method: 'GET',
-        url,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => {
-          this.isLoading = false;
-          this.user = res.data.data;
-        })
-        .catch((err) => {
-          this.isLoading = false;
-          console.dir(err);
-        });
-    },
     logOut() {
       localStorage.setItem('accessToken', '');
       this.$router.push({ name: 'index' });
     },
-  },
-  mounted() {
-    const token = localStorage.getItem('accessToken');
-    const _id = localStorage.getItem('userID');
-    const name = localStorage.getItem('userName');
-    const avatar = localStorage.getItem('userAvatar');
-    const role = localStorage.getItem('userRole');
-    this.user = { token, _id, name, role, avatar };
-    // this.getProfile();
-    // console.log(_id)
   },
 };
 </script>

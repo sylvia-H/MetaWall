@@ -91,9 +91,6 @@ export default {
       let url = `${import.meta.env.VITE_BASE_API}/posts?timeSort=${
         this.timeSort
       }&q=${this.searchKeyword}`;
-      // this.$http
-      //   .get(url)
-
       this.axios({
         method: 'GET',
         url,

@@ -2,12 +2,12 @@
   <VLoading :active="isLoading" :z-index="3000">
     <VueLoader></VueLoader>
   </VLoading>
-  <Navbar class="fixed" />
+  <Navbar class="fixed" :user="user" />
   <main class="min-h-screen bg-grid py-28">
     <div class="container_wall mx-auto flex justify-between">
       <!-- 左側動態牆 -->
       <div>
-        <RouterView :user="user" />
+        <RouterView :user="user" @get-profile="getProfile" />
       </div>
       <!-- 右側選單 -->
       <div class="w-80 h-88 bg-white border-2 border-secondary py-8 px-6">
@@ -95,26 +95,9 @@ export default {
     };
   },
   methods: {
-    check(token) {
-      const url = `${import.meta.env.VITE_BASE_API}/check`;
-      this.axios({
-        method: 'GET',
-        url,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then(() => {
-          this.getProfile(token);
-        })
-        .catch((err) => {
-          localStorage.setItem('accessToken', '');
-          this.$router.push('/');
-          console.dir(err);
-        });
-    },
-    getProfile(token) {
+    getProfile() {
       this.isLoading = true;
+      const token = localStorage.getItem('accessToken');
       let url = `${import.meta.env.VITE_BASE_API}/users/profile`;
       this.axios({
         method: 'GET',
@@ -136,7 +119,12 @@ export default {
   mounted() {
     const token = localStorage.getItem('accessToken');
     if (token) {
-      this.check(token);
+      const _id = localStorage.getItem('userID');
+      const name = localStorage.getItem('userName');
+      const role = localStorage.getItem('userRole');
+      const avatar = localStorage.getItem('userAvatar');
+      this.user = { _id, name, avatar, role };
+      // this.getProfile();
     } else {
       this.$router.push('/');
     }
