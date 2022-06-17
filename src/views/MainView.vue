@@ -121,9 +121,10 @@ export default {
     if (token) {
       const _id = localStorage.getItem('userID');
       const name = localStorage.getItem('userName');
-      const role = localStorage.getItem('userRole');
       const avatar = localStorage.getItem('userAvatar');
-      this.user = { _id, name, avatar, role };
+      const role = localStorage.getItem('userRole');
+      const sex = localStorage.getItem('userSex');
+      this.user = { _id, name, avatar, role, sex };
       // this.getProfile();
     } else {
       this.$router.push('/');

@@ -17,15 +17,17 @@
   >
     <!-- 追蹤對象資訊 -->
     <div class="flex p-4">
-      <div
-        class="h-11 w-11 border-2 border-secondary rounded-full overflow-hidden mr-2.5"
-      >
-        <img
-          class="object-cover w-full h-full"
-          :src="following.user.avatar"
-          :alt="`${following.user.name}'s avatar`"
-        />
-      </div>
+      <RouterLink :to="`/main/space/${following.user._id}`">
+        <div
+          class="h-11 w-11 border-2 border-secondary rounded-full overflow-hidden mr-2.5"
+        >
+          <img
+            class="object-cover w-full h-full"
+            :src="following.user.avatar"
+            :alt="`${following.user.name}'s avatar`"
+          />
+        </div>
+      </RouterLink>
       <div class="grow">
         <p class="font-noto-sans-tc font-bold text-base mb-1">
           {{ following.user.name }}

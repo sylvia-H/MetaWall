@@ -9,28 +9,55 @@
   >
     <div class="p-6">
       <!-- 發文者資訊 -->
-      <div class="flex mb-4">
-        <RouterLink :to="`/main/space/${post.author._id}`">
-          <div
-            class="h-11 w-11 border-2 border-secondary rounded-full overflow-hidden mr-2.5"
-          >
-            <img
-              class="object-cover w-full h-full"
-              :src="post.author.avatar"
-              :alt="`${post.author.name}'s avatar`"
-            />
-          </div>
-        </RouterLink>
-        <div>
+      <div class="flex justify-between mb-4">
+        <div class="flex">
           <RouterLink :to="`/main/space/${post.author._id}`">
-            <p class="font-noto-sans-tc font-bold text-base mb-1">
-              {{ post.author.name }}
-            </p>
+            <div
+              class="h-11 w-11 border-2 border-secondary rounded-full overflow-hidden mr-2.5"
+            >
+              <img
+                class="object-cover w-full h-full"
+                :src="post.author.avatar"
+                :alt="`${post.author.name}'s avatar`"
+              />
+            </div>
           </RouterLink>
-          <p class="font-baloo-da-2 text-xs text-brown-1">
-            {{ $filters.transferToDate(post.createdAt) }}
-          </p>
+          <div>
+            <RouterLink :to="`/main/space/${post.author._id}`">
+              <p class="font-noto-sans-tc font-bold text-base mb-1">
+                {{ post.author.name }}
+              </p>
+            </RouterLink>
+            <p class="font-baloo-da-2 text-xs text-brown-1">
+              {{ $filters.transferToDate(post.createdAt) }}
+            </p>
+          </div>
         </div>
+        <!-- 編輯貼文按鈕 -->
+        <button v-if="post.author._id === user._id" type="button">
+          <div class="group relative">
+            <div class="block group-hover:hidden group-focus:hidden">
+              <span
+                class="iconify text-2xl font-extrabold text-primary"
+                data-icon="clarity:note-edit-line"
+              ></span>
+            </div>
+            <div class="hidden group-hover:block group-focus:block">
+              <span
+                class="iconify text-2xl font-extrabold text-primary"
+                data-icon="bxs:edit"
+              ></span>
+            </div>
+            <div
+              class="absolute hidden group-hover:block w-30 py-3 top-6 left-0 shadow-lg rounded-lg bg-white z-50"
+            >
+              <ul class="w-full text-center">
+                <li class="hover:bg-gray-100 mb-2">編輯貼文</li>
+                <li class="hover:bg-gray-100">刪除貼文</li>
+              </ul>
+            </div>
+          </div>
+        </button>
       </div>
       <!-- 貼文 -->
       <div>
