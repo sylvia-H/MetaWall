@@ -33,7 +33,13 @@ export default {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then(() => {
+        .then((res) => {
+          const { _id, name, avatar, role, sex } = res.data.data;
+          localStorage.setItem('userID', _id);
+          localStorage.setItem('userName', name);
+          localStorage.setItem('userAvatar', avatar);
+          localStorage.setItem('userRole', role);
+          localStorage.setItem('userSex', sex);
           this.$router.push('/main');
         })
         .catch((err) => {
