@@ -49,7 +49,11 @@
     </button>
     <div class="flex justify-center mt-4">
       <!-- Google 第三方登入 -->
-      <button type="button" @click="googlePassport" class="flex font-bold items-center p-1 border-b-2 border-gray-1 hover:border-secondary">
+      <button
+        type="button"
+        @click="googlePassport"
+        class="flex font-bold items-center p-1 border-b-2 border-gray-1 hover:border-secondary"
+      >
         <span
           class="iconify text-xl font-extrabold mr-2"
           data-icon="akar-icons:google-contained-fill"
@@ -96,8 +100,14 @@ export default {
     },
     googlePassport() {
       this.isLoading = true;
-      this.$http
-        .get(`${import.meta.env.VITE_BASE_API}/auth/google`)
+      let url = `${import.meta.env.VITE_BASE_API}/auth/google`;
+      this.axios({
+        method: 'GET',
+        url,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
+      })
         .then((res) => {
           this.isLoading = false;
           console.log(res.data);
