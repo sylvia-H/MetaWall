@@ -2,7 +2,7 @@
   <VLoading :active="isLoading" :z-index="3000">
     <VueLoader></VueLoader>
   </VLoading>
-  <h2 class="text-xl md:text-2xl font-bold sm:mb-8">註冊</h2>
+  <h2 class="text-xl md:text-2xl font-bold sm:mb-4">註冊新帳號</h2>
   <div class="sm:hidden my-6">
     <img
       class="h-full w-full"
@@ -43,14 +43,21 @@
     <ErrorMessage class="text-red-600 text-sm text-bold" name="password" />
     <button
       type="submit"
-      class="w-full my-4 py-4 rounded-lg bg-gray-2 border-2 border-gray-4 hover:bg-blue-700 text-white font-bold text-base"
+      class="w-full mt-4 py-2 rounded-lg bg-gray-2 border-2 border-gray-4 hover:bg-blue-700 text-white font-bold text-base"
     >
       註冊
     </button>
+    <div class="flex justify-center mt-4">
+      <!-- Google 第三方登入 -->
+      <button type="button" @click="googlePassPort" class="flex font-bold items-center p-1 border-b-2 border-gray-1 hover:border-secondary">
+        <span
+          class="iconify text-xl font-extrabold mr-2"
+          data-icon="akar-icons:google-contained-fill"
+        ></span>
+        使用 Google 帳號註冊登入
+      </button>
+    </div>
   </VForm>
-  <RouterLink to="/">
-    <button class="text-secondary font-bold text-base">登入</button>
-  </RouterLink>
 </template>
 
 <script>
@@ -81,6 +88,27 @@ export default {
           this.isLoading = false;
           this.user = {};
           this.$router.push('/');
+        })
+        .catch((err) => {
+          this.isLoading = false;
+          console.dir(err);
+        });
+    },
+    googlePassPort() {
+      this.isLoading = true;
+      this.$http
+        .get(`${import.meta.env.VITE_BASE_API}/auth/google`)
+        .then((res) => {
+          this.isLoading = false;
+          this.user = {};
+          // 本機儲存 token 等 payload 資訊
+          const { token, _id, name, role, avatar } = res.data.user;
+          localStorage.setItem('accessToken', token);
+          localStorage.setItem('userID', _id);
+          localStorage.setItem('userName', name);
+          localStorage.setItem('userAvatar', avatar);
+          localStorage.setItem('userRole', role);
+          this.$router.push('/main');
         })
         .catch((err) => {
           this.isLoading = false;

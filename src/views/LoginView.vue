@@ -82,7 +82,6 @@ export default {
           localStorage.setItem('userName', name);
           localStorage.setItem('userAvatar', avatar);
           localStorage.setItem('userRole', role);
-          // this.axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
           this.$router.push('/main');
         })
         .catch((err) => {
