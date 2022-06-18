@@ -49,21 +49,18 @@
     </button>
   </VForm>
   <!-- Google 第三方登入 -->
-  <RouterLink
-    to="https://fierce-headland-11812.herokuapp.com/auth/google"
-    class="flex justify-center mt-4"
+  <button
+    type="button"
+    class="flex font-bold items-center p-1 border-b-2 border-gray-1 hover:border-secondary"
   >
-    <button
-      type="button"
-      class="flex font-bold items-center p-1 border-b-2 border-gray-1 hover:border-secondary"
-    >
+    <a href="https://fierce-headland-11812.herokuapp.com/auth/google">
       <span
         class="iconify text-xl font-extrabold mr-2"
         data-icon="akar-icons:google-contained-fill"
       ></span>
       使用 Google 帳號註冊登入
-    </button>
-  </RouterLink>
+    </a>
+  </button>
 </template>
 
 <script>
