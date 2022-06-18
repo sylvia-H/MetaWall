@@ -34,7 +34,7 @@
     />
     <ErrorMessage class="text-red-600 text-sm text-bold" name="email" />
     <VField
-      class="mt-4 px-6 py-2 placeholder:italic placeholder:text-slate-400 block bg-white w-full border-2 border-secondary shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+      class="mt-6 px-6 py-2 placeholder:italic placeholder:text-slate-400 block bg-white w-full border-2 border-secondary shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
       placeholder="Password"
       type="password"
       name="password"
@@ -51,7 +51,7 @@
   <!-- Google 第三方登入 -->
   <button
     type="button"
-    class="flex font-bold items-center p-1 border-b-2 border-gray-1 hover:border-secondary"
+    class="mt-4 flex font-bold items-center p-1 border-b-2 border-gray-1 hover:border-secondary"
   >
     <a class="flex items-center" href="https://fierce-headland-11812.herokuapp.com/auth/google">
       <span
