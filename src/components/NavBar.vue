@@ -87,7 +87,7 @@ export default {
   props: ['user'],
   methods: {
     logOut() {
-      localStorage.setItem('accessToken', '');
+      localStorage.removeItem('accessToken');
       this.$router.push({ name: 'index' });
     },
   },
