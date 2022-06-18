@@ -47,21 +47,23 @@
     >
       註冊
     </button>
-    <div class="flex justify-center mt-4">
-      <!-- Google 第三方登入 -->
-      <button
-        type="button"
-        @click="googlePassport"
-        class="flex font-bold items-center p-1 border-b-2 border-gray-1 hover:border-secondary"
-      >
-        <span
-          class="iconify text-xl font-extrabold mr-2"
-          data-icon="akar-icons:google-contained-fill"
-        ></span>
-        使用 Google 帳號註冊登入
-      </button>
-    </div>
   </VForm>
+  <!-- Google 第三方登入 -->
+  <RouterLink
+    to="https://fierce-headland-11812.herokuapp.com/auth/google"
+    class="flex justify-center mt-4"
+  >
+    <button
+      type="button"
+      class="flex font-bold items-center p-1 border-b-2 border-gray-1 hover:border-secondary"
+    >
+      <span
+        class="iconify text-xl font-extrabold mr-2"
+        data-icon="akar-icons:google-contained-fill"
+      ></span>
+      使用 Google 帳號註冊登入
+    </button>
+  </RouterLink>
 </template>
 
 <script>
@@ -92,34 +94,6 @@ export default {
           this.isLoading = false;
           this.user = {};
           this.$router.push('/');
-        })
-        .catch((err) => {
-          this.isLoading = false;
-          console.dir(err);
-        });
-    },
-    googlePassport() {
-      this.isLoading = true;
-      let url = `${import.meta.env.VITE_BASE_API}/auth/google`;
-      this.axios({
-        method: 'GET',
-        url,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-        },
-      })
-        .then((res) => {
-          this.isLoading = false;
-          console.log(res.data);
-          this.user = {};
-          // 本機儲存 token 等 payload 資訊
-          const { token, _id, name, role, avatar } = res.data.user;
-          localStorage.setItem('accessToken', token);
-          localStorage.setItem('userID', _id);
-          localStorage.setItem('userName', name);
-          localStorage.setItem('userAvatar', avatar);
-          localStorage.setItem('userRole', role);
-          this.$router.push('/main');
         })
         .catch((err) => {
           this.isLoading = false;
