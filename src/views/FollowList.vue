@@ -57,7 +57,7 @@ export default {
     getFollowing() {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/users/follow`;
-      const token = localStorage.getItem('accessToken');
+      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
       this.axios({
         method: 'GET',
         url,
@@ -68,7 +68,6 @@ export default {
         .then((res) => {
           this.isLoading = false;
           this.followList = res.data.data.following;
-          console.log(res.data.data.following);
         })
         .catch((err) => {
           this.isLoading = false;

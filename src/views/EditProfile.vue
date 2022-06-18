@@ -267,7 +267,7 @@ export default {
     getProfile() {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/users/profile`;
-      const token = localStorage.getItem('accessToken');
+      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
       this.axios({
         method: 'GET',
         url,
@@ -288,7 +288,7 @@ export default {
     editProfile() {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/users/profile`;
-      const token = localStorage.getItem('accessToken');
+      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
       this.axios({
         method: 'PATCH',
         url,
@@ -310,7 +310,7 @@ export default {
     uploadAvatar(e) {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/upload`;
-      const token = localStorage.getItem('accessToken');
+      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
       let data = new FormData();
       const file = e.target.files[0];
       data.append('file', file);
@@ -345,7 +345,7 @@ export default {
     updatePassword() {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/users/updatePassword`;
-      const token = localStorage.getItem('accessToken');
+      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
       this.axios({
         method: 'POST',
         url,
@@ -356,13 +356,15 @@ export default {
       })
         .then((res) => {
           this.isLoading = false;
+          const AUTH_TOKEN = res.data.user.token;
+          document.cookie = `AUTH_TOKEN=${AUTH_TOKEN}`;
           // 本機儲存 token 等 payload 資訊
-          const { token, _id, name, role, avatar } = res.data.user;
-          localStorage.setItem('accessToken', token);
-          localStorage.setItem('userID', _id);
-          localStorage.setItem('userName', name);
-          localStorage.setItem('userAvatar', avatar);
-          localStorage.setItem('userRole', role);
+          // const { token, _id, name, role, avatar } = res.data.user;
+          // localStorage.setItem('accessToken', token);
+          // localStorage.setItem('userID', _id);
+          // localStorage.setItem('userName', name);
+          // localStorage.setItem('userAvatar', avatar);
+          // localStorage.setItem('userRole', role);
         })
         .catch((err) => {
           this.isLoading = false;

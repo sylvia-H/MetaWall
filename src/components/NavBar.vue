@@ -76,18 +76,25 @@ nav {
 </style>
 
 <script>
+import { mapState } from 'pinia';
+import userStore from '@/stores/userStore';
+
 export default {
-  data() {
-    return {
-      user: {
-        avatar: 'https://i.imgur.com/K3dyy79.png',
-      },
-    };
+  // data() {
+  //   return {
+  //     user: {
+  //       avatar: 'https://i.imgur.com/K3dyy79.png',
+  //     },
+  //   };
+  // },
+  // props: ['user'],
+  computed: {
+    ...mapState(userStore, ['user']),
   },
-  props: ['user'],
   methods: {
     logOut() {
-      localStorage.removeItem('accessToken');
+      // localStorage.removeItem('accessToken');
+      document.cookie = `AUTH_TOKEN=`;
       this.$router.push({ name: 'index' });
     },
   },

@@ -13,8 +13,8 @@ export function transferToDate(date) {
 
 export function transferSinceThen(date) {
   // 算出距今幾天
-  const Today = new Date(Date.now()).getDay();
-  const Data = new Date(date).getDay();
-  const day = Today - Data;
-  return day;
+  var Today = new Date(Date.now());
+  var Data = new Date(date);
+  var days = parseInt(Math.abs(Today - Data) / 1000 / 60 / 60 / 24); // 把相差的毫秒數轉換為天數
+  return days;
 }

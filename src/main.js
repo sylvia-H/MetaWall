@@ -1,4 +1,6 @@
 import { createApp } from 'vue';
+// Pinia
+import { createPinia } from "pinia";
 // TailwindCSS
 import './styles/all.scss';
 // purge-icons
@@ -21,6 +23,9 @@ import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json';
 // 載入 router & APP
 import router from './router';
 import App from './App.vue';
+
+// Pinia
+const pinia = createPinia();
 
 // vee-validate：加入全部規則
 Object.keys(AllRules).forEach((rule) => {
@@ -47,6 +52,7 @@ app.config.globalProperties.$filters = {
   transferToDate,
   transferSinceThen,
 };
+app.use(pinia);
 app.use(router);
 app.use(VueAxios, axios);
 app.component('VLoading', Loading);

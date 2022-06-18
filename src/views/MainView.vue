@@ -2,12 +2,12 @@
   <VLoading :active="isLoading" :z-index="3000">
     <VueLoader></VueLoader>
   </VLoading>
-  <Navbar class="fixed" :user="user" />
+  <Navbar class="fixed" />
   <main class="min-h-screen bg-grid py-28">
     <div class="container_wall mx-auto flex justify-between">
       <!-- 左側動態牆 -->
       <div>
-        <RouterView :user="user" @get-profile="getProfile" />
+        <RouterView @get-profile="getProfile" />
       </div>
       <!-- 右側選單 -->
       <div class="w-80 h-88 bg-white border-2 border-secondary py-8 px-6">
@@ -81,6 +81,10 @@
 <script>
 import Navbar from '@/components/NavBar.vue';
 import VueLoader from '@/components/LoadingOverlay.vue';
+import { mapState, mapActions } from 'pinia';
+// import userStore from '@/stores/userStore';
+import { userStore } from '@/stores';
+
 export default {
   components: {
     Navbar,
@@ -89,15 +93,17 @@ export default {
   data() {
     return {
       isLoading: false,
-      user: {
-        avatar: 'https://i.imgur.com/K3dyy79.png',
-      },
     };
   },
+  computed: {
+    ...mapState(userStore, ['user']),
+  },
   methods: {
+    ...mapActions(userStore, ['updateUser']),
     getProfile() {
       this.isLoading = true;
-      const token = localStorage.getItem('accessToken');
+      // const token = localStorage.getItem('accessToken');
+      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
       let url = `${import.meta.env.VITE_BASE_API}/users/profile`;
       this.axios({
         method: 'GET',
@@ -108,7 +114,7 @@ export default {
       })
         .then((res) => {
           this.isLoading = false;
-          this.user = res.data.data;
+          this.updateUser(res.data.data);
         })
         .catch((err) => {
           this.isLoading = false;
@@ -117,18 +123,28 @@ export default {
     },
   },
   mounted() {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      const _id = localStorage.getItem('userID');
-      const name = localStorage.getItem('userName');
-      const avatar = localStorage.getItem('userAvatar');
-      const role = localStorage.getItem('userRole');
-      const sex = localStorage.getItem('userSex');
-      this.user = { _id, name, avatar, role, sex };
-      // this.getProfile();
+    let AUTH_TOKEN;
+    if (document.cookie.split(`; AUTH_TOKEN=`).length === 2) {
+      AUTH_TOKEN = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
+    }
+    if (AUTH_TOKEN) {
+      this.getProfile();
     } else {
       this.$router.push('/');
     }
+    
+    // const token = localStorage.getItem('accessToken');
+    // if (token) {
+    //   const _id = localStorage.getItem('userID');
+    //   const name = localStorage.getItem('userName');
+    //   const avatar = localStorage.getItem('userAvatar');
+    //   const role = localStorage.getItem('userRole');
+    //   const sex = localStorage.getItem('userSex');
+    //   this.user = { _id, name, avatar, role, sex };
+    //   // this.getProfile();
+    // } else {
+    //   this.$router.push('/');
+    // }
   },
 };
 </script>

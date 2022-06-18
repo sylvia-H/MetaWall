@@ -62,6 +62,8 @@
 import VueLoader from '@/components/LoadingOverlay.vue';
 import NoPost from '@/components/NoPost.vue';
 import WallPosts from '@/components/WallPosts.vue';
+import { mapState, mapActions } from 'pinia';
+import userStore from '@/stores/userStore';
 
 export default {
   components: {
@@ -77,8 +79,10 @@ export default {
       searchKeyword: '',
     };
   },
-  props: ['user'],
-  inject: ['emitter'],
+  computed: {
+    ...mapState(userStore, ['user']),
+  },
+  // props: ['user'],
   watch: {
     searchKeyword: function () {
       this.getPosts();
@@ -87,7 +91,8 @@ export default {
   methods: {
     getPosts() {
       this.isLoading = true;
-      const token = localStorage.getItem('accessToken');
+      // const token = localStorage.getItem('accessToken');
+      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
       let url = `${import.meta.env.VITE_BASE_API}/posts?timeSort=${
         this.timeSort
       }&q=${this.searchKeyword}`;
@@ -98,18 +103,18 @@ export default {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((res) => {
-        this.isLoading = false;
-        this.posts = res.data.data;
-      })
-      .catch((err) => {
-        this.isLoading = false;
-        console.dir(err);
-      });
+        .then((res) => {
+          this.isLoading = false;
+          this.posts = res.data.data;
+        })
+        .catch((err) => {
+          this.isLoading = false;
+          console.dir(err);
+        });
     },
   },
   mounted() {
-    const token = localStorage.getItem('accessToken');
+    // const token = localStorage.getItem('accessToken');
     this.getPosts();
   },
 };

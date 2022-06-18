@@ -22,8 +22,15 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'pinia';
+import { userStore } from '@/stores';
+
 export default {
+  computed: {
+    ...mapState(userStore, ['user']),
+  },
   methods: {
+    ...mapActions(userStore, ['updateUser']),
     check(token) {
       const url = `${import.meta.env.VITE_BASE_API}/check`;
       this.axios({
@@ -34,26 +41,41 @@ export default {
         },
       })
         .then((res) => {
-          const { _id, name, avatar, role, sex } = res.data.data;
-          localStorage.setItem('userID', _id);
-          localStorage.setItem('userName', name);
-          localStorage.setItem('userAvatar', avatar);
-          localStorage.setItem('userRole', role);
-          localStorage.setItem('userSex', sex);
+          this.updateUser(res.data.data);
+          // const { _id, name, avatar, role, sex } = res.data.data;
+          // localStorage.setItem('userID', _id);
+          // localStorage.setItem('userName', name);
+          // localStorage.setItem('userAvatar', avatar);
+          // localStorage.setItem('userRole', role);
+          // localStorage.setItem('userSex', sex);
           this.$router.push('/main');
         })
         .catch((err) => {
-          localStorage.setItem('accessToken', '');
+          // localStorage.setItem('accessToken', '');
+          this.user = {};
           this.$router.push('/');
           console.dir(err);
         });
     },
   },
   mounted() {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      this.check(token);
+    let AUTH_TOKEN;
+    if (document.cookie.split(`; AUTH_TOKEN=`).length === 2) {
+      AUTH_TOKEN = document.cookie
+        .split(`; AUTH_TOKEN=`)
+        .pop()
+        .split(';')
+        .shift();
+      if (AUTH_TOKEN) {
+        this.check(AUTH_TOKEN);
+      }
+    } else {
+      this.$router.push('/');
     }
+    // const token = localStorage.getItem('accessToken');
+    // if (token) {
+    //   this.check(token);
+    // }
   },
 };
 </script>

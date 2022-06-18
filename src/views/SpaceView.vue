@@ -103,6 +103,8 @@
 import VueLoader from '@/components/LoadingOverlay.vue';
 import NoPost from '@/components/NoPost.vue';
 import WallPosts from '@/components/WallPosts.vue';
+import { mapState } from 'pinia';
+import userStore from '@/stores/userStore';
 
 export default {
   components: {
@@ -124,10 +126,13 @@ export default {
       showFollow: true,
     };
   },
+  computed: {
+    ...mapState(userStore, ['user']),
+  },
   methods: {
     getPosts(id) {
       this.isLoading = true;
-      const token = localStorage.getItem('accessToken');
+      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
       let url = `${import.meta.env.VITE_BASE_API}/posts/${id}?timeSort=${
         this.timeSort
       }&q=${this.searchKeyword}`;
@@ -150,7 +155,7 @@ export default {
     },
     getProfile(id) {
       this.isLoading = true;
-      const token = localStorage.getItem('accessToken');
+      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
       let url = `${import.meta.env.VITE_BASE_API}/users/profile/${id}`;
       this.axios({
         method: 'GET',
@@ -178,7 +183,7 @@ export default {
     },
     followAuthor(id) {
       this.isLoading = true;
-      const token = localStorage.getItem('accessToken');
+      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
       let url = `${import.meta.env.VITE_BASE_API}/users/follow/${id}`;
       let httpStatus;
       if (this.isFollow) {

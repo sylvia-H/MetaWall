@@ -22,7 +22,7 @@
       placeholder="Email"
       type="email"
       name="email"
-      v-model="user.email"
+      v-model="tempUser.email"
     />
     <ErrorMessage class="text-red-600 text-sm text-bold" name="email" />
     <VField
@@ -30,7 +30,7 @@
       placeholder="Password"
       type="password"
       name="password"
-      v-model="user.password"
+      v-model="tempUser.password"
     />
     <ErrorMessage class="text-red-600 text-sm text-bold" name="password" />
     <p v-if="signInErr" class="mt-2 text-red-600 text-sm text-bold">
@@ -50,6 +50,8 @@
 
 <script>
 import VueLoader from '@/components/LoadingOverlay.vue';
+import { mapState, mapActions } from 'pinia';
+import userStore from '@/stores/userStore';
 
 export default {
   components: {
@@ -58,7 +60,7 @@ export default {
   data() {
     return {
       isLoading: false,
-      user: {},
+      tempUser: {},
       VFormSchema: {
         email: 'required|email',
         password: 'required|alpha_num_mix',
@@ -66,22 +68,28 @@ export default {
       signInErr: false,
     };
   },
+  computed: {
+    ...mapState(userStore, ['user']),
+  },
   methods: {
+    ...mapActions(userStore, ['updateUser']),
     signIn() {
       this.isLoading = true;
-      const user = this.user;
       this.$http
-        .post(`${import.meta.env.VITE_BASE_API}/users/sign_in`, user)
+        .post(`${import.meta.env.VITE_BASE_API}/users/sign_in`, this.tempUser)
         .then((res) => {
           this.isLoading = false;
           this.signInErr = false;
           // 本機儲存 token 等 payload 資訊
-          const { token, _id, name, role, avatar } = res.data.user;
-          localStorage.setItem('accessToken', token);
-          localStorage.setItem('userID', _id);
-          localStorage.setItem('userName', name);
-          localStorage.setItem('userAvatar', avatar);
-          localStorage.setItem('userRole', role);
+          // const { token, _id, name, role, avatar } = res.data.user;
+          // localStorage.setItem('accessToken', token);
+          // localStorage.setItem('userID', _id);
+          // localStorage.setItem('userName', name);
+          // localStorage.setItem('userAvatar', avatar);
+          // localStorage.setItem('userRole', role);
+          const AUTH_TOKEN = res.data.user.token;
+          document.cookie = `AUTH_TOKEN=${AUTH_TOKEN}`;
+          this.updateUser(res.data.user);
           this.$router.push('/main');
         })
         .catch((err) => {
@@ -92,10 +100,21 @@ export default {
     },
   },
   mounted() {
-    const token = localStorage.getItem('accessToken');
-    if(token){
+    let AUTH_TOKEN;
+    if (document.cookie.split(`; AUTH_TOKEN=`).length === 2) {
+      AUTH_TOKEN = document.cookie
+        .split(`; AUTH_TOKEN=`)
+        .pop()
+        .split(';')
+        .shift();
+    }
+    if (AUTH_TOKEN) {
       this.$router.push('/main');
     }
+    // const token = localStorage.getItem('accessToken');
+    // if (token) {
+    //   this.$router.push('/main');
+    // }
   },
 };
 </script>
