@@ -53,7 +53,7 @@
     type="button"
     class="flex font-bold items-center p-1 border-b-2 border-gray-1 hover:border-secondary"
   >
-    <a href="https://fierce-headland-11812.herokuapp.com/auth/google">
+    <a class="flex items-center" href="https://fierce-headland-11812.herokuapp.com/auth/google">
       <span
         class="iconify text-xl font-extrabold mr-2"
         data-icon="akar-icons:google-contained-fill"
