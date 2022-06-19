@@ -103,7 +103,7 @@ export default {
     getProfile() {
       this.isLoading = true;
       // const token = localStorage.getItem('accessToken');
-      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
+      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
       let url = `${import.meta.env.VITE_BASE_API}/users/profile`;
       this.axios({
         method: 'GET',
