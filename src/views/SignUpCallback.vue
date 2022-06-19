@@ -44,8 +44,8 @@ export default {
     },
   },
   mounted() {
-    if (route.query.token) {
-      this.check(route.query.token);
+    if (this.$route.query.token) {
+      this.check(this.$route.query.token);
     } else {
       router.push({ name: 'signup' });
     }
