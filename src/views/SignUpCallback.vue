@@ -24,6 +24,7 @@ export default {
   methods: {
     ...mapActions(userStore, ['updateUser']),
     check(token) {
+      this.isLoading = true;
       const url = `${import.meta.env.VITE_BASE_API}/check`;
       this.axios({
         method: 'GET',
@@ -33,10 +34,12 @@ export default {
         },
       })
         .then((res) => {
+          this.isLoading = false;
           this.updateUser(res.data.data);
           this.$router.push({ name: 'main' });
         })
         .catch((err) => {
+          this.isLoading = false;
           this.updateUser({});
           // this.$router.push('/');
           console.dir(err);
