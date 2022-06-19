@@ -28,9 +28,21 @@
                 {{ post.author.name }}
               </p>
             </RouterLink>
-            <p class="font-baloo-da-2 text-xs text-brown-1">
-              {{ $filters.transferToDate(post.createdAt) }}
-            </p>
+            <div class="flex items-center">
+              <p class="font-baloo-da-2 text-sm text-brown-1 align-baseline mr-2">
+                {{ $filters.transferToDate(post.createdAt) }}
+              </p>
+              <span
+                v-if="post.privacy === 'private'"
+                class="iconify block text-sm text-gray-500 align-top"
+                data-icon="bxs:lock"
+              ></span>
+              <span
+                v-else
+                class="iconify block text-sm text-gray-500 align-top"
+                data-icon="eva:globe-2-fill"
+              ></span>
+            </div>
           </div>
         </div>
         <!-- 編輯貼文按鈕 -->
@@ -221,7 +233,11 @@ export default {
     addLikes(postID) {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/posts/${postID}/like`;
-      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
+      const token = document.cookie
+        .split(`AUTH_TOKEN=`)
+        .pop()
+        .split(';')
+        .shift();
       this.axios({
         method: 'POST',
         url,
@@ -246,7 +262,11 @@ export default {
         comment: this.commentBody,
       };
       const url = `${import.meta.env.VITE_BASE_API}/comments`;
-      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
+      const token = document.cookie
+        .split(`AUTH_TOKEN=`)
+        .pop()
+        .split(';')
+        .shift();
       this.axios({
         method: 'POST',
         url,
@@ -255,7 +275,7 @@ export default {
         },
         data: comment,
       })
-        .then((res) => {
+        .then(() => {
           this.isLoading = false;
           this.$emit('get-posts');
         })

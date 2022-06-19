@@ -128,7 +128,7 @@ export default {
     if (AUTH_TOKEN) {
       this.getProfile();
     } else {
-      this.$router.push({ name: 'signin' });
+      this.$router.push({ name: 'login' });
     }
   },
 };
