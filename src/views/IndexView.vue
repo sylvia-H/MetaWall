@@ -52,7 +52,7 @@ export default {
         })
         .catch((err) => {
           // localStorage.setItem('accessToken', '');
-          this.user = {};
+          this.updateUser({});
           this.$router.push('/');
           console.dir(err);
         });

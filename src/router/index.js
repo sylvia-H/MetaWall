@@ -24,6 +24,11 @@ const routes = [
         name: 'signup',
         component: () => import('../views/SignUpView.vue'),
       },
+      {
+        path: 'callback',
+        name: 'callback',
+        component: () => import('../views/SignUpCallback.vue'),
+      },
     ],
   },
   {
