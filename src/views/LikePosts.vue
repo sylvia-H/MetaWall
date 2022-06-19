@@ -106,7 +106,7 @@ export default {
       this.isLoading = true;
       const _id = localStorage.getItem('userID');
       let url = `${import.meta.env.VITE_BASE_API}/posts/user/${_id}`;
-      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
+      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
       this.axios({
         method: 'GET',
         url,
@@ -127,7 +127,7 @@ export default {
     unLike(postID) {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/posts/${postID}/like`;
-      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
+      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
       this.axios({
         method: 'DELETE',
         url,

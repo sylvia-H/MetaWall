@@ -132,7 +132,7 @@ export default {
   methods: {
     getPosts(id) {
       this.isLoading = true;
-      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
+      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
       let url = `${import.meta.env.VITE_BASE_API}/posts/${id}?timeSort=${
         this.timeSort
       }&q=${this.searchKeyword}`;
@@ -155,7 +155,7 @@ export default {
     },
     getProfile(id) {
       this.isLoading = true;
-      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
+      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
       let url = `${import.meta.env.VITE_BASE_API}/users/profile/${id}`;
       this.axios({
         method: 'GET',
@@ -183,7 +183,7 @@ export default {
     },
     followAuthor(id) {
       this.isLoading = true;
-      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
+      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
       let url = `${import.meta.env.VITE_BASE_API}/users/follow/${id}`;
       let httpStatus;
       if (this.isFollow) {

@@ -267,7 +267,7 @@ export default {
     getProfile() {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/users/profile`;
-      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
+      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
       this.axios({
         method: 'GET',
         url,
@@ -288,7 +288,7 @@ export default {
     editProfile() {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/users/profile`;
-      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
+      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
       this.axios({
         method: 'PATCH',
         url,
@@ -310,7 +310,7 @@ export default {
     uploadAvatar(e) {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/upload`;
-      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
+      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
       let data = new FormData();
       const file = e.target.files[0];
       data.append('file', file);
@@ -345,7 +345,7 @@ export default {
     updatePassword() {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/users/updatePassword`;
-      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
+      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
       this.axios({
         method: 'POST',
         url,

@@ -57,7 +57,7 @@ export default {
     getFollowing() {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/users/follow`;
-      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
+      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
       this.axios({
         method: 'GET',
         url,

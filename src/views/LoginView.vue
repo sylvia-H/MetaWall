@@ -101,9 +101,9 @@ export default {
   },
   mounted() {
     let AUTH_TOKEN;
-    if (document.cookie.split(`; AUTH_TOKEN=`).length === 2) {
+    if (document.cookie.split(`AUTH_TOKEN=`).length === 2) {
       AUTH_TOKEN = document.cookie
-        .split(`; AUTH_TOKEN=`)
+        .split(`AUTH_TOKEN=`)
         .pop()
         .split(';')
         .shift();

@@ -116,7 +116,7 @@ export default {
     addPost() {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/posts`;
-      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
+      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
       // this.$http
       //   .post(url, this.post)
       this.axios({
@@ -145,7 +145,7 @@ export default {
     uploadImg(e) {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/upload`;
-      const token = document.cookie.split(`; AUTH_TOKEN=`).pop().split(';').shift();
+      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
       let data = new FormData();
       const file = e.target.files[0];
       data.append('file', file);
