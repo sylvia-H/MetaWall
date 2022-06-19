@@ -77,7 +77,7 @@ nav {
 
 <script>
 import { mapState } from 'pinia';
-import userStore from '@/stores/userStore';
+import { userStore } from '@/stores';
 
 export default {
   computed: {

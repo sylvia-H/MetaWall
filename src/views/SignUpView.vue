@@ -53,7 +53,10 @@
     type="button"
     class="mt-4 flex font-bold items-center p-1 border-b-2 border-gray-1 hover:border-secondary"
   >
-    <a class="flex items-center" href="https://fierce-headland-11812.herokuapp.com/auth/google">
+    <a
+      class="flex items-center"
+      href="https://fierce-headland-11812.herokuapp.com/auth/google"
+    >
       <span
         class="iconify text-xl font-extrabold mr-2"
         data-icon="akar-icons:google-contained-fill"
@@ -65,6 +68,8 @@
 
 <script>
 import VueLoader from '@/components/LoadingOverlay.vue';
+import { mapState } from 'pinia';
+import { statusStore } from '@/stores';
 
 export default {
   components: {
@@ -72,7 +77,6 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
       user: {},
       VFormSchema: {
         nickname: 'required|min:2',
@@ -80,6 +84,9 @@ export default {
         password: 'required|alpha_num_mix',
       },
     };
+  },
+  computed: {
+    ...mapState(statusStore, ['isLoading']),
   },
   methods: {
     signUp() {

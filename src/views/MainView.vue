@@ -82,7 +82,7 @@
 import Navbar from '@/components/NavBar.vue';
 import VueLoader from '@/components/LoadingOverlay.vue';
 import { mapState, mapActions } from 'pinia';
-import { userStore } from '@/stores';
+import { userStore, statusStore } from '@/stores';
 
 export default {
   components: {
@@ -96,6 +96,7 @@ export default {
   },
   computed: {
     ...mapState(userStore, ['user']),
+    ...mapState(statusStore, ['isLoading']),
   },
   methods: {
     ...mapActions(userStore, ['updateUser']),

@@ -210,8 +210,8 @@
 
 <script>
 import VueLoader from '@/components/LoadingOverlay.vue';
-import { mapState, mapActions } from 'pinia';
-import userStore from '@/stores/userStore';
+import { mapState } from 'pinia';
+import { userStore, statusStore } from '@/stores';
 
 export default {
   components: {
@@ -228,6 +228,7 @@ export default {
   inject: ['emitter'],
   computed: {
     ...mapState(userStore, ['user']),
+    ...mapState(statusStore, ['isLoading']),
   },
   methods: {
     addLikes(postID) {

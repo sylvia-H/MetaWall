@@ -63,7 +63,7 @@ import VueLoader from '@/components/LoadingOverlay.vue';
 import NoPost from '@/components/NoPost.vue';
 import WallPosts from '@/components/WallPosts.vue';
 import { mapState, mapActions } from 'pinia';
-import userStore from '@/stores/userStore';
+import { userStore, statusStore } from '@/stores';
 
 export default {
   components: {
@@ -81,6 +81,7 @@ export default {
   },
   computed: {
     ...mapState(userStore, ['user']),
+    ...mapState(statusStore, ['isLoading']),
   },
   watch: {
     searchKeyword: function () {

@@ -96,6 +96,7 @@
 
 <script>
 import VueLoader from '@/components/LoadingOverlay.vue';
+import { statusStore } from '@/stores';
 
 export default {
   components: {
@@ -103,7 +104,6 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
       post: {
         content: '',
         image: '',
@@ -111,6 +111,9 @@ export default {
       },
       errorMsg: '',
     };
+  },
+  computed: {
+    ...mapState(statusStore, ['isLoading']),
   },
   methods: {
     addPost() {

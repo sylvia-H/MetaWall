@@ -242,6 +242,8 @@
 
 <script>
 import VueLoader from '@/components/LoadingOverlay.vue';
+import { mapState } from 'pinia';
+import { statusStore } from '@/stores';
 
 export default {
   components: {
@@ -249,7 +251,6 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
       profile: {
         avatar: 'https://i.imgur.com/K3dyy79.png',
       },
@@ -264,6 +265,9 @@ export default {
     };
   },
   inject: ['emitter'],
+  computed: {
+    ...mapState(statusStore, ['isLoading']),
+  },
   methods: {
     getProfile() {
       this.isLoading = true;

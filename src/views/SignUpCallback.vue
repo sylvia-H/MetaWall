@@ -7,19 +7,15 @@
 <script>
 import VueLoader from '@/components/LoadingOverlay.vue';
 import { mapState, mapActions } from 'pinia';
-import userStore from '@/stores/userStore';
+import { userStore, statusStore } from '@/stores';
 
 export default {
   components: {
     VueLoader,
   },
-  data() {
-    return {
-      isLoading: false,
-    };
-  },
   computed: {
     ...mapState(userStore, ['user']),
+    ...mapState(statusStore, ['isLoading']),
   },
   methods: {
     ...mapActions(userStore, ['updateUser']),

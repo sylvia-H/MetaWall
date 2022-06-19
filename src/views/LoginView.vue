@@ -51,7 +51,7 @@
 <script>
 import VueLoader from '@/components/LoadingOverlay.vue';
 import { mapState, mapActions } from 'pinia';
-import userStore from '@/stores/userStore';
+import { userStore, statusStore } from '@/stores';
 
 export default {
   components: {
@@ -59,7 +59,6 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
       tempUser: {},
       VFormSchema: {
         email: 'required|email',
@@ -70,6 +69,7 @@ export default {
   },
   computed: {
     ...mapState(userStore, ['user']),
+    ...mapState(statusStore, ['isLoading']),
   },
   methods: {
     ...mapActions(userStore, ['updateUser']),
