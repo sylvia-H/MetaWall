@@ -54,7 +54,7 @@
     </div>
   </div>
   <!-- 貼文動態 -->
-  <WallPosts v-if="posts" :user="user" :posts="posts" @get-posts="getPosts" />
+  <WallPosts v-if="posts" :posts="posts" @get-posts="getPosts" />
   <NoPost v-else />
 </template>
 
@@ -82,7 +82,6 @@ export default {
   computed: {
     ...mapState(userStore, ['user']),
   },
-  // props: ['user'],
   watch: {
     searchKeyword: function () {
       this.getPosts();
@@ -91,7 +90,6 @@ export default {
   methods: {
     getPosts() {
       this.isLoading = true;
-      // const token = localStorage.getItem('accessToken');
       const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
       let url = `${import.meta.env.VITE_BASE_API}/posts?timeSort=${
         this.timeSort
@@ -114,7 +112,6 @@ export default {
     },
   },
   mounted() {
-    // const token = localStorage.getItem('accessToken');
     this.getPosts();
   },
 };

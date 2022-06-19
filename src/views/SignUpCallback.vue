@@ -51,7 +51,7 @@ export default {
     if (this.$route.query.token) {
       this.check(this.$route.query.token);
     } else {
-      router.push({ name: 'signup' });
+      this.$router.push({ name: 'signup' });
     }
   },
 };

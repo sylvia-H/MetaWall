@@ -82,7 +82,6 @@
 import Navbar from '@/components/NavBar.vue';
 import VueLoader from '@/components/LoadingOverlay.vue';
 import { mapState, mapActions } from 'pinia';
-// import userStore from '@/stores/userStore';
 import { userStore } from '@/stores';
 
 export default {
@@ -102,7 +101,6 @@ export default {
     ...mapActions(userStore, ['updateUser']),
     getProfile() {
       this.isLoading = true;
-      // const token = localStorage.getItem('accessToken');
       const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
       let url = `${import.meta.env.VITE_BASE_API}/users/profile`;
       this.axios({
@@ -130,23 +128,8 @@ export default {
     if (AUTH_TOKEN) {
       this.getProfile();
     } else {
-      // this.$router.push('/');
-      console.log(document.cookie);
-      console.log(AUTH_TOKEN);
+      this.$router.push({ name: 'signin' });
     }
-    
-    // const token = localStorage.getItem('accessToken');
-    // if (token) {
-    //   const _id = localStorage.getItem('userID');
-    //   const name = localStorage.getItem('userName');
-    //   const avatar = localStorage.getItem('userAvatar');
-    //   const role = localStorage.getItem('userRole');
-    //   const sex = localStorage.getItem('userSex');
-    //   this.user = { _id, name, avatar, role, sex };
-    //   // this.getProfile();
-    // } else {
-    //   this.$router.push('/');
-    // }
   },
 };
 </script>

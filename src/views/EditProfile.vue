@@ -263,6 +263,7 @@ export default {
       hiddenConfirmPassword: true,
     };
   },
+  inject: ['emitter'],
   methods: {
     getProfile() {
       this.isLoading = true;
@@ -297,9 +298,8 @@ export default {
         },
         data: this.profile,
       })
-        .then((res) => {
+        .then(() => {
           this.isLoading = false;
-          // this.getProfile();
           this.$emit('get-profile');
         })
         .catch((err) => {
@@ -358,13 +358,6 @@ export default {
           this.isLoading = false;
           const AUTH_TOKEN = res.data.user.token;
           document.cookie = `AUTH_TOKEN=${AUTH_TOKEN}`;
-          // 本機儲存 token 等 payload 資訊
-          // const { token, _id, name, role, avatar } = res.data.user;
-          // localStorage.setItem('accessToken', token);
-          // localStorage.setItem('userID', _id);
-          // localStorage.setItem('userName', name);
-          // localStorage.setItem('userAvatar', avatar);
-          // localStorage.setItem('userRole', role);
         })
         .catch((err) => {
           this.isLoading = false;

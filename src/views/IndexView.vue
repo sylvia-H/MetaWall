@@ -42,16 +42,9 @@ export default {
       })
         .then((res) => {
           this.updateUser(res.data.data);
-          // const { _id, name, avatar, role, sex } = res.data.data;
-          // localStorage.setItem('userID', _id);
-          // localStorage.setItem('userName', name);
-          // localStorage.setItem('userAvatar', avatar);
-          // localStorage.setItem('userRole', role);
-          // localStorage.setItem('userSex', sex);
           this.$router.push('/main');
         })
         .catch((err) => {
-          // localStorage.setItem('accessToken', '');
           this.updateUser({});
           this.$router.push('/');
           console.dir(err);
@@ -72,10 +65,6 @@ export default {
     } else {
       this.$router.push('/');
     }
-    // const token = localStorage.getItem('accessToken');
-    // if (token) {
-    //   this.check(token);
-    // }
   },
 };
 </script>

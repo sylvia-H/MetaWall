@@ -95,7 +95,7 @@
     </div>
   </div>
   <!-- 貼文動態 -->
-  <WallPosts v-if="posts" :user="author" :posts="posts" @get-posts="getPosts" />
+  <WallPosts v-if="posts" :posts="posts" @get-posts="getPosts" />
   <NoPost v-else />
 </template>
 

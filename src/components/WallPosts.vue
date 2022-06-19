@@ -173,11 +173,11 @@
           <div
             class="h-10 w-10 border-2 border-secondary rounded-full overflow-hidden mr-2.5"
           >
-            <!-- <img
+            <img
               class="object-cover w-full h-full"
               :src="item.author.avatar"
               :alt="`${item.author.name}'s avatar`"
-            /> -->
+            />
           </div>
           <div>
             <p class="font-noto-sans-tc font-bold text-base mb-1">
@@ -187,7 +187,7 @@
               {{ $filters.transferToDate(item.createdAt) }}
             </p>
             <p class="font-noto-sans-tc text-base">
-              {{ item.body || '暫時無法顯示' }}
+              {{ item.comment || '暫時無法顯示' }}
             </p>
           </div>
         </div>
@@ -198,6 +198,9 @@
 
 <script>
 import VueLoader from '@/components/LoadingOverlay.vue';
+import { mapState, mapActions } from 'pinia';
+import userStore from '@/stores/userStore';
+
 export default {
   components: {
     VueLoader,
@@ -205,19 +208,20 @@ export default {
   data() {
     return {
       isLoading: false,
-      allPosts: [],
       commentBody: '',
       posts: [],
-      user: {},
     };
   },
-  props: ['user', 'posts'],
+  props: ['posts'],
   inject: ['emitter'],
+  computed: {
+    ...mapState(userStore, ['user']),
+  },
   methods: {
     addLikes(postID) {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/posts/${postID}/like`;
-      const token = localStorage.getItem('accessToken');
+      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
       this.axios({
         method: 'POST',
         url,
@@ -242,7 +246,7 @@ export default {
         comment: this.commentBody,
       };
       const url = `${import.meta.env.VITE_BASE_API}/comments`;
-      const token = localStorage.getItem('accessToken');
+      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
       this.axios({
         method: 'POST',
         url,

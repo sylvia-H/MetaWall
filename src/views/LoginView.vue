@@ -80,13 +80,6 @@ export default {
         .then((res) => {
           this.isLoading = false;
           this.signInErr = false;
-          // 本機儲存 token 等 payload 資訊
-          // const { token, _id, name, role, avatar } = res.data.user;
-          // localStorage.setItem('accessToken', token);
-          // localStorage.setItem('userID', _id);
-          // localStorage.setItem('userName', name);
-          // localStorage.setItem('userAvatar', avatar);
-          // localStorage.setItem('userRole', role);
           const AUTH_TOKEN = res.data.user.token;
           document.cookie = `AUTH_TOKEN=${AUTH_TOKEN}`;
           this.updateUser(res.data.user);
@@ -111,10 +104,6 @@ export default {
     if (AUTH_TOKEN) {
       this.$router.push('/main');
     }
-    // const token = localStorage.getItem('accessToken');
-    // if (token) {
-    //   this.$router.push('/main');
-    // }
   },
 };
 </script>

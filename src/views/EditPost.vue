@@ -117,8 +117,6 @@ export default {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/posts`;
       const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
-      // this.$http
-      //   .post(url, this.post)
       this.axios({
         method: 'POST',
         url,
