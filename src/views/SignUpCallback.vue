@@ -42,7 +42,7 @@ export default {
         .catch((err) => {
           this.isLoading = false;
           this.updateUser({});
-          // this.$router.push('/');
+          this.$router.push('/');
           console.dir(err);
         });
     },

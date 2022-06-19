@@ -130,7 +130,9 @@ export default {
     if (AUTH_TOKEN) {
       this.getProfile();
     } else {
-      this.$router.push('/');
+      // this.$router.push('/');
+      console.log(document.cookie);
+      console.log(AUTH_TOKEN);
     }
     
     // const token = localStorage.getItem('accessToken');
