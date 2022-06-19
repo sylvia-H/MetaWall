@@ -35,6 +35,7 @@ export default {
       })
         .then((res) => {
           this.isLoading = false;
+          document.cookie = `AUTH_TOKEN=${token}`;
           this.updateUser(res.data.data);
           this.$router.push({ name: 'main' });
         })
@@ -49,8 +50,6 @@ export default {
   mounted() {
     if (this.$route.query.token) {
       this.check(this.$route.query.token);
-      console.log(this.$route.query);
-      console.log(this.$route.query.token);
     } else {
       router.push({ name: 'signup' });
     }
