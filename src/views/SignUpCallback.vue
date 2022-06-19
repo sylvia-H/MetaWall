@@ -38,7 +38,7 @@ export default {
         })
         .catch((err) => {
           this.updateUser({});
-          this.$router.push('/');
+          // this.$router.push('/');
           console.dir(err);
         });
     },
@@ -46,6 +46,8 @@ export default {
   mounted() {
     if (this.$route.query.token) {
       this.check(this.$route.query.token);
+      console.log(this.$route.query);
+      console.log(this.$route.query.token);
     } else {
       router.push({ name: 'signup' });
     }
