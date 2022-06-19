@@ -89,11 +89,6 @@ export default {
     Navbar,
     VueLoader,
   },
-  data() {
-    return {
-      isLoading: false,
-    };
-  },
   computed: {
     ...mapState(userStore, ['user']),
     ...mapState(statusStore, ['isLoading']),

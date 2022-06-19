@@ -48,7 +48,9 @@
     <!-- 貼文排序 -->
     <select
       v-model="timeSort"
-      @change="getPosts()"
+      @change="
+        getPosts(timeSort, searchKeyword, authorID, authorID == user._id)
+      "
       class="border-2 border-secondary focus:border-indigo-300 py-3 px-4 mr-3"
     >
       <option value="desc">最新貼文</option>
@@ -61,7 +63,10 @@
           class="input-group relative flex items-stretch w-full border-2 border-secondary"
         >
           <input
-            v-model="searchKeyword"
+            v-model.trim="searchKeyword"
+            @change="
+              getPosts(timeSort, searchKeyword, authorID, authorID == user._id)
+            "
             type="search"
             class="form-control relative flex-auto min-w-0 block w-full py-3 px-4 text-base font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
             placeholder="搜尋貼文"
@@ -72,7 +77,9 @@
             class="btn px-4 py-3 bg-primary text-white border-l-2 border-secondary hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out flex items-center"
             type="button"
             id="button-search"
-            @click="getPosts()"
+            @click="
+              getPosts(timeSort, searchKeyword, authorID, authorID == user._id)
+            "
           >
             <svg
               aria-hidden="true"
@@ -95,7 +102,7 @@
     </div>
   </div>
   <!-- 貼文動態 -->
-  <WallPosts v-if="posts" :posts="posts" @get-posts="getPosts" />
+  <WallPosts v-if="posts" :authorID="authorID" />
   <NoPost v-else />
 </template>
 
@@ -103,8 +110,8 @@
 import VueLoader from '@/components/LoadingOverlay.vue';
 import NoPost from '@/components/NoPost.vue';
 import WallPosts from '@/components/WallPosts.vue';
-import { mapState } from 'pinia';
-import { userStore, statusStore } from '@/stores';
+import { mapState, mapActions } from 'pinia';
+import { userStore, statusStore, postStore } from '@/stores';
 
 export default {
   components: {
@@ -114,48 +121,42 @@ export default {
   },
   data() {
     return {
+      authorID: '',
       author: {
         avatar: 'https://i.imgur.com/K3dyy79.png',
         followers: [],
       },
-      posts: [],
       timeSort: 'desc',
       searchKeyword: '',
       isFollow: false,
       showFollow: true,
     };
   },
+  watch: {
+    searchKeyword: function () {
+      const searchStr = encodeURI(this.searchKeyword);
+      this.getPosts(
+        this.timeSort,
+        searchStr,
+        this.authorID,
+        this.authorID == this.user._id
+      );
+    },
+  },
   computed: {
     ...mapState(userStore, ['user']),
     ...mapState(statusStore, ['isLoading']),
+    ...mapState(postStore, ['posts']),
   },
   methods: {
-    getPosts(id) {
-      this.isLoading = true;
-      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
-      let url = `${import.meta.env.VITE_BASE_API}/posts/${id}?timeSort=${
-        this.timeSort
-      }&q=${this.searchKeyword}`;
-      this.axios({
-        method: 'GET',
-        url,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => {
-          this.isLoading = false;
-          this.posts = res.data.data;
-          console.log(res.data.data);
-        })
-        .catch((err) => {
-          this.isLoading = false;
-          console.dir(err);
-        });
-    },
+    ...mapActions(postStore, ['getPosts']),
     getProfile(id) {
       this.isLoading = true;
-      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
+      const token = document.cookie
+        .split(`AUTH_TOKEN=`)
+        .pop()
+        .split(';')
+        .shift();
       let url = `${import.meta.env.VITE_BASE_API}/users/profile/${id}`;
       this.axios({
         method: 'GET',
@@ -167,14 +168,16 @@ export default {
         .then((res) => {
           this.isLoading = false;
           this.author = res.data.data;
-          res.data.data.followers.forEach((user) => {
-            if (user._id === localStorage.getItem('userID')) {
+          res.data.data.followers.forEach((follower) => {
+            if (follower._id === this.user._id) {
               this.isFollow = true;
             }
           });
-          if (id === localStorage.getItem('userID')) {
+          if (this.authorID === this.user._id) {
             this.showFollow = false;
           }
+          // 取得作者貼文列表
+          this.getPosts('desc', '', this.authorID, this.authorID == this.user._id);
         })
         .catch((err) => {
           this.isLoading = false;
@@ -183,7 +186,11 @@ export default {
     },
     followAuthor(id) {
       this.isLoading = true;
-      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
+      const token = document.cookie
+        .split(`AUTH_TOKEN=`)
+        .pop()
+        .split(';')
+        .shift();
       let url = `${import.meta.env.VITE_BASE_API}/users/follow/${id}`;
       let httpStatus;
       if (this.isFollow) {
@@ -212,9 +219,13 @@ export default {
     },
   },
   mounted() {
+    // 取出網址參數 id（目標對象 ID）
     const { id } = this.$route.params;
-    this.getPosts(id);
+    this.authorID = id;
     this.getProfile(id);
+  },
+  unmounted() {
+    this.authorID = null;
   },
 };
 </script>

@@ -1,4 +1,5 @@
 import userStore from './userStore';
 import statusStore from './statusStore';
+import postStore from './postStore';
 
-export { userStore, statusStore };
+export { userStore, statusStore, postStore };

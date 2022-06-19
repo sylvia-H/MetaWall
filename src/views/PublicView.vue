@@ -7,7 +7,7 @@
     <!-- 貼文排序 -->
     <select
       v-model="timeSort"
-      @change="getPosts()"
+      @change="getPosts(timeSort, searchKeyword, '', false)"
       class="border-2 border-secondary focus:border-indigo-300 py-3 px-4 mr-3"
     >
       <option value="desc">最新貼文</option>
@@ -20,7 +20,8 @@
           class="input-group relative flex items-stretch w-full border-2 border-secondary"
         >
           <input
-            v-model="searchKeyword"
+            v-model.trim="searchKeyword"
+            @keyup.enter="getPosts(timeSort, searchKeyword, '', false)"
             type="search"
             class="form-control relative flex-auto min-w-0 block w-full py-3 px-4 text-base font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
             placeholder="搜尋貼文"
@@ -31,7 +32,7 @@
             class="btn px-4 py-3 bg-primary text-white border-l-2 border-secondary hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out flex items-center"
             type="button"
             id="button-search"
-            @click="getPosts()"
+            @click="getPosts(timeSort, searchKeyword, '', false)"
           >
             <svg
               aria-hidden="true"
@@ -54,7 +55,7 @@
     </div>
   </div>
   <!-- 貼文動態 -->
-  <WallPosts v-if="posts" :posts="posts" @get-posts="getPosts" />
+  <WallPosts v-if="posts" :authorID="authorID" />
   <NoPost v-else />
 </template>
 
@@ -63,7 +64,7 @@ import VueLoader from '@/components/LoadingOverlay.vue';
 import NoPost from '@/components/NoPost.vue';
 import WallPosts from '@/components/WallPosts.vue';
 import { mapState, mapActions } from 'pinia';
-import { userStore, statusStore } from '@/stores';
+import { userStore, statusStore, postStore } from '@/stores';
 
 export default {
   components: {
@@ -73,47 +74,27 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
-      posts: [],
       timeSort: 'desc',
       searchKeyword: '',
+      authorID: '',
     };
   },
   computed: {
     ...mapState(userStore, ['user']),
     ...mapState(statusStore, ['isLoading']),
+    ...mapState(postStore, ['posts']),
   },
   watch: {
     searchKeyword: function () {
-      this.getPosts();
+      const searchStr = encodeURI(this.searchKeyword);
+      this.getPosts(this.timeSort, searchStr, '', false);
     },
   },
   methods: {
-    getPosts() {
-      this.isLoading = true;
-      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
-      let url = `${import.meta.env.VITE_BASE_API}/posts?timeSort=${
-        this.timeSort
-      }&q=${this.searchKeyword}`;
-      this.axios({
-        method: 'GET',
-        url,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => {
-          this.isLoading = false;
-          this.posts = res.data.data;
-        })
-        .catch((err) => {
-          this.isLoading = false;
-          console.dir(err);
-        });
-    },
+    ...mapActions(postStore, ['getPosts']),
   },
   mounted() {
-    this.getPosts();
+    this.getPosts('desc', '', '', false);
   },
 };
 </script>

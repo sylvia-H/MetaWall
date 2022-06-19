@@ -4,7 +4,7 @@
   </VLoading>
   <div
     v-for="post in posts"
-    :key="_id"
+    :key="post._id"
     class="dialogue w-full border-2 border-secondary bg-white rounded-lg mb-4"
   >
     <div class="p-6">
@@ -210,8 +210,8 @@
 
 <script>
 import VueLoader from '@/components/LoadingOverlay.vue';
-import { mapState } from 'pinia';
-import { userStore, statusStore } from '@/stores';
+import { mapState, mapActions } from 'pinia';
+import { userStore, statusStore, postStore } from '@/stores';
 
 export default {
   components: {
@@ -219,18 +219,18 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
       commentBody: '',
-      posts: [],
     };
   },
-  props: ['posts'],
+  props: ['authorID'],
   inject: ['emitter'],
   computed: {
     ...mapState(userStore, ['user']),
     ...mapState(statusStore, ['isLoading']),
+    ...mapState(postStore, ['posts']),
   },
   methods: {
+    ...mapActions(postStore, ['getPosts']),
     addLikes(postID) {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/posts/${postID}/like`;
@@ -248,7 +248,8 @@ export default {
       })
         .then(() => {
           this.isLoading = false;
-          this.$emit('get-posts');
+          // this.$emit('get-posts');
+          this.getPosts('desc', '', this.authorID, this.authorID == this.user._id);
         })
         .catch((err) => {
           this.isLoading = false;
@@ -278,7 +279,8 @@ export default {
       })
         .then(() => {
           this.isLoading = false;
-          this.$emit('get-posts');
+          // this.$emit('get-posts');
+          this.getPosts('desc', '', this.authorID, this.authorID == this.user._id);
         })
         .catch((err) => {
           this.isLoading = false;
