@@ -96,6 +96,7 @@
 
 <script>
 import VueLoader from '@/components/LoadingOverlay.vue';
+import { mapState } from 'pinia';
 import { statusStore } from '@/stores';
 
 export default {

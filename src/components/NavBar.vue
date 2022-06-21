@@ -85,7 +85,7 @@ export default {
   },
   methods: {
     logOut() {
-      document.cookie = `AUTH_TOKEN=`;
+      document.cookie = 'AUTH_TOKEN=';
       this.$router.push({ name: 'login' });
     },
   },
