@@ -105,7 +105,7 @@
               ></span>
             </button>
             <button
-              @click="addLikes(post._id)"
+              @click="addLikes(post)"
               type="button"
               class="hidden group-hover:block group-focus:block"
             >
@@ -235,16 +235,22 @@ export default {
   },
   methods: {
     ...mapActions(postStore, ['getPosts']),
-    addLikes(postID) {
+    addLikes(post) {
       this.isLoading = true;
-      let url = `${import.meta.env.VITE_BASE_API}/posts/${postID}/like`;
+      let url = `${import.meta.env.VITE_BASE_API}/posts/${post._id}/like`;
+      let httpStatus;
+      if(post.likes.includes(this.user._id)){
+        httpStatus = 'DELETE';
+      }else{
+        httpStatus = 'POST';
+      }
       const token = document.cookie
         .split(`AUTH_TOKEN=`)
         .pop()
         .split(';')
         .shift();
       this.axios({
-        method: 'POST',
+        method: httpStatus,
         url,
         headers: {
           Authorization: `Bearer ${token}`,
@@ -252,7 +258,6 @@ export default {
       })
         .then(() => {
           this.isLoading = false;
-          // this.$emit('get-posts');
           this.getPosts(
             'desc',
             '',
