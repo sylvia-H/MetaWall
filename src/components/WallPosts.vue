@@ -29,7 +29,9 @@
               </p>
             </RouterLink>
             <div class="flex items-center">
-              <p class="font-baloo-da-2 text-sm text-brown-1 align-baseline mr-2">
+              <p
+                class="font-baloo-da-2 text-sm text-brown-1 align-baseline mr-2"
+              >
                 {{ $filters.transferToDate(post.createdAt) }}
               </p>
               <span
@@ -185,11 +187,13 @@
           <div
             class="h-10 w-10 border-2 border-secondary rounded-full overflow-hidden mr-2.5"
           >
-            <img
-              class="object-cover w-full h-full"
-              :src="item.author.avatar"
-              :alt="`${item.author.name}'s avatar`"
-            />
+            <RouterLink :to="`/main/space/${item.author._id}`">
+              <img
+                class="object-cover w-full h-full"
+                :src="item.author.avatar"
+                :alt="`${item.author.name}'s avatar`"
+              />
+            </RouterLink>
           </div>
           <div>
             <p class="font-noto-sans-tc font-bold text-base mb-1">
@@ -249,7 +253,12 @@ export default {
         .then(() => {
           this.isLoading = false;
           // this.$emit('get-posts');
-          this.getPosts('desc', '', this.authorID, this.authorID == this.user._id);
+          this.getPosts(
+            'desc',
+            '',
+            this.authorID,
+            this.authorID == this.user._id
+          );
         })
         .catch((err) => {
           this.isLoading = false;
@@ -280,7 +289,12 @@ export default {
         .then(() => {
           this.isLoading = false;
           // this.$emit('get-posts');
-          this.getPosts('desc', '', this.authorID, this.authorID == this.user._id);
+          this.getPosts(
+            'desc',
+            '',
+            this.authorID,
+            this.authorID == this.user._id
+          );
         })
         .catch((err) => {
           this.isLoading = false;
