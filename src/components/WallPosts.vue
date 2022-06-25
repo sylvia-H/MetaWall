@@ -34,16 +34,27 @@
               >
                 {{ $filters.transferToDate(post.createdAt) }}
               </p>
-              <span
-                v-if="post.privacy === 'private'"
-                class="iconify block text-sm text-gray-500 align-top"
-                data-icon="bxs:lock"
-              ></span>
-              <span
-                v-else
-                class="iconify block text-sm text-gray-500 align-top"
-                data-icon="eva:globe-2-fill"
-              ></span>
+              <div v-if="isEdit === post._id">
+                <select
+                  v-model="post.privacy"
+                  class="border border-secondary focus:border-indigo-300 text-sm"
+                >
+                  <option value="private">只限本人</option>
+                  <option value="public">公開</option>
+                </select>
+              </div>
+              <div v-else>
+                <span
+                  v-if="post.privacy === 'private'"
+                  class="iconify block text-sm text-gray-500 align-top"
+                  data-icon="bxs:lock"
+                ></span>
+                <span
+                  v-else
+                  class="iconify block text-sm text-gray-500 align-top"
+                  data-icon="eva:globe-2-fill"
+                ></span>
+              </div>
             </div>
           </div>
         </div>
@@ -66,8 +77,12 @@
               class="absolute hidden group-hover:block w-30 py-3 top-6 left-0 shadow-lg rounded-lg bg-white z-50"
             >
               <ul class="w-full text-center">
-                <li class="hover:bg-gray-100 mb-2">編輯貼文</li>
-                <li class="hover:bg-gray-100">刪除貼文</li>
+                <li @click="isEdit = post._id" class="hover:bg-gray-100 mb-2">
+                  編輯貼文
+                </li>
+                <li @click="delPost(post)" class="hover:bg-gray-100">
+                  刪除貼文
+                </li>
               </ul>
             </div>
           </div>
@@ -75,7 +90,18 @@
       </div>
       <!-- 貼文 -->
       <div>
-        <p class="font-noto-sans-tc text-base mb-4">
+        <!-- 貼文編輯框 -->
+        <div v-if="isEdit === post._id">
+          <textarea
+            class="mb-4 placeholder:italic placeholder:text-slate-400 block bg-white w-full border-2 border-secondary py-3 px-4 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+            placeholder="輸入您的貼文內容"
+            name="post"
+            rows="5"
+            v-model="post.content"
+          />
+        </div>
+        <!-- 貼文內容 -->
+        <p v-else class="font-noto-sans-tc text-base mb-4">
           {{ post.content }}
         </p>
       </div>
@@ -89,6 +115,42 @@
           :src="post.image"
           alt="post image"
         />
+      </div>
+      <!-- 貼圖編輯框 -->
+      <div v-if="isEdit === post._id" class="mb-4">
+        <label for="uploadImg" class="relative block mb-5">
+          <input
+            type="text"
+            name="uploadImg"
+            class="p-2 placeholder:italic placeholder:text-slate-400 placeholder:text-sm w-full block bg-white border border-slate-300 rounded-md focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+            aria-label="請輸入圖片網址或上傳圖檔"
+            placeholder="請輸入圖片連結位址"
+            v-model="post.image"
+          />
+        </label>
+        <div class="flex justify-between">
+          <label
+            for="file"
+            class="relative mb-4 flex items-center justify-center text-white bg-black w-30 h-10"
+          >
+            <input
+              @change="uploadImg"
+              type="file"
+              class="absolute top-0 left-0 cursor-pointer opacity-0 w-full h-full"
+            />
+            <button type="button" class="whitespace-nowrap py-1 px-6">
+              上傳圖片檔
+            </button>
+          </label>
+          <!-- 完成編輯貼文按鈕 -->
+          <button
+            type="button"
+            @click="editPost(post)"
+            class="bg-blue-600 text-white whitespace-nowrap py-1 px-6 w-30 h-10"
+          >
+            完成編輯
+          </button>
+        </div>
       </div>
       <!-- 按讚數 -->
       <div class="flex items-center mb-4">
@@ -224,6 +286,7 @@ export default {
   data() {
     return {
       commentBody: '',
+      isEdit: '',
     };
   },
   props: ['authorID'],
@@ -239,9 +302,9 @@ export default {
       this.isLoading = true;
       let url = `${import.meta.env.VITE_BASE_API}/posts/${post._id}/like`;
       let httpStatus;
-      if(post.likes.includes(this.user._id)){
+      if (post.likes.includes(this.user._id)) {
         httpStatus = 'DELETE';
-      }else{
+      } else {
         httpStatus = 'POST';
       }
       const token = document.cookie
@@ -306,6 +369,121 @@ export default {
           console.dir(err);
         });
       this.commentBody = '';
+    },
+    setEditStatus(id) {
+      console.log(id);
+      this.isEdit = id;
+    },
+    delPost(post) {
+      const url = `${import.meta.env.VITE_BASE_API}/posts/${post._id}`;
+      const token = document.cookie
+        .split(`AUTH_TOKEN=`)
+        .pop()
+        .split(';')
+        .shift();
+
+      this.$swal
+        .fire({
+          title: `確定要刪除此篇貼文嗎？`,
+          text: '貼文刪除後將無法恢復。',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: '確定刪除！',
+          cancelButtonText: '取消',
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.isLoading = true;
+            this.axios({
+              method: 'DELETE',
+              url,
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+              .then(() => {
+                this.isLoading = false;
+                this.getPosts(
+                  'desc',
+                  '',
+                  this.authorID,
+                  this.authorID == this.user._id
+                );
+              })
+              .catch((err) => {
+                this.isLoading = false;
+                this.$swal.fire({
+                  icon: 'error',
+                  title: '失敗！',
+                  text: '請再試一次',
+                });
+                console.dir(err);
+              });
+          }
+        });
+    },
+    uploadImg(e) {
+      this.isLoading = true;
+      let url = `${import.meta.env.VITE_BASE_API}/upload`;
+      const token = document.cookie
+        .split(`AUTH_TOKEN=`)
+        .pop()
+        .split(';')
+        .shift();
+      let data = new FormData();
+      const file = e.target.files[0];
+      data.append('file', file);
+      this.axios({
+        method: 'POST',
+        url,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data,
+      })
+        .then((res) => {
+          this.isLoading = false;
+          this.errorMsg = '';
+          this.post.image = res.data.imgUrl;
+        })
+        .catch((err) => {
+          this.isLoading = false;
+          this.errorMsg = err.response.data.message;
+        });
+    },
+    editPost(post) {
+      let url = `${import.meta.env.VITE_BASE_API}/posts/${post._id}`;
+      const token = document.cookie
+        .split(`AUTH_TOKEN=`)
+        .pop()
+        .split(';')
+        .shift();
+      const data = {
+        content: post.content,
+        image: post.image,
+        privacy: post.privacy,
+      };
+      this.axios({
+        method: 'PATCH',
+        url,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data,
+      })
+        .then(() => {
+          this.isLoading = false;
+          this.getPosts('desc', '', '', false);
+        })
+        .catch((err) => {
+          this.isLoading = false;
+          console.dir(err);
+        });
+
+      // 恢復未編輯狀態
+      this.isEdit = '';
     },
   },
 };
