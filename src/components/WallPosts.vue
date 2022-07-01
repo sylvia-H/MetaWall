@@ -220,7 +220,7 @@
             class="input-group relative flex items-stretch w-full border-2 border-secondary"
           >
             <input
-              v-model="commentBody"
+              v-model="commentBody[post._id]"
               type="text"
               class="form-control relative flex-auto min-w-0 block w-full py-2 px-4 text-base font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
               placeholder="留言..."
@@ -285,7 +285,7 @@ export default {
   },
   data() {
     return {
-      commentBody: '',
+      commentBody: {},
       isEdit: '',
     };
   },
@@ -338,7 +338,7 @@ export default {
       const comment = {
         article_id: post['_id'],
         author: this.user['_id'],
-        comment: this.commentBody,
+        comment: this.commentBody[post._id],
       };
       const url = `${import.meta.env.VITE_BASE_API}/comments`;
       const token = document.cookie
