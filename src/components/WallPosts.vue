@@ -187,13 +187,10 @@
         <!-- 沒有讚數 -->
         <div v-else class="flex items-center">
           <button
-            @click="addLikes(post._id)"
+            @click="addLikes(post)"
             type="button"
             class="group-hover:hidden group-focus:hidden mr-1"
           >
-            <!-- <i
-              class="bi bi-hand-thumbs-up text-xl font-extrabold text-brown-1"
-            ></i> -->
             <span
               class="iconify text-xl font-extrabold text-brown-1"
               data-icon="bi:hand-thumbs-up"
@@ -356,7 +353,6 @@ export default {
       })
         .then(() => {
           this.isLoading = false;
-          // this.$emit('get-posts');
           this.getPosts(
             'desc',
             '',
