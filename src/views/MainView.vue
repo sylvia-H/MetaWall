@@ -7,7 +7,7 @@
     <div class="container_wall mx-auto flex justify-between">
       <!-- 左側動態牆 -->
       <div>
-        <RouterView @get-profile="getProfile" />
+        <RouterView v-if="isUpdateUser" @get-profile="getProfile" />
       </div>
       <!-- 右側選單 -->
       <div class="w-80 h-88 bg-white border-2 border-secondary py-8 px-6">
@@ -85,6 +85,11 @@ import { mapState, mapActions } from 'pinia';
 import { userStore, statusStore } from '@/stores';
 
 export default {
+  data() {
+    return {
+      isUpdateUser: false,
+    };
+  },
   components: {
     Navbar,
     VueLoader,
@@ -97,7 +102,11 @@ export default {
     ...mapActions(userStore, ['updateUser']),
     getProfile() {
       this.isLoading = true;
-      const token = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
+      const token = document.cookie
+        .split(`AUTH_TOKEN=`)
+        .pop()
+        .split(';')
+        .shift();
       let url = `${import.meta.env.VITE_BASE_API}/users/profile`;
       this.axios({
         method: 'GET',
@@ -109,6 +118,7 @@ export default {
         .then((res) => {
           this.isLoading = false;
           this.updateUser(res.data.data);
+          this.isUpdateUser = true;
         })
         .catch((err) => {
           this.isLoading = false;
@@ -119,7 +129,11 @@ export default {
   mounted() {
     let AUTH_TOKEN;
     if (document.cookie.split(`AUTH_TOKEN=`).length === 2) {
-      AUTH_TOKEN = document.cookie.split(`AUTH_TOKEN=`).pop().split(';').shift();
+      AUTH_TOKEN = document.cookie
+        .split(`AUTH_TOKEN=`)
+        .pop()
+        .split(';')
+        .shift();
     }
     if (AUTH_TOKEN) {
       this.getProfile();
